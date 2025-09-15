@@ -109,6 +109,10 @@
             font-weight: bold;
             box-shadow: 0 2px 8px #FFD70033;
         }
+        .result-item .show-program-btn:hover {
+            background: #fff;
+            color: #FFD700;
+        }
         .initialization-overlay {
             display: none;
             position: fixed;
@@ -165,8 +169,36 @@
             color: #FFD700;
             font-size: 16px;
         }
-        .search-again-container { display:none; }
-        .search-again-container.show { display:block;}
+        /* EDIT: Tombol Cari Lagi di tengah, besar, dan jarak atas-bawah 5px */
+        .search-again-container {
+            display: none;
+            text-align: center;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+        .search-again-container.show {
+            display: block;
+        }
+        .search-again-btn {
+            background: #FFD700;
+            color: #181818;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 32px;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 16px #FFD70033;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            display: inline-block;
+        }
+        .search-again-btn:hover {
+            background: #fff;
+            color: #FFD700;
+            box-shadow: 0 8px 24px #FFD70044;
+        }
         .search-container.hidden { display:none; }
         .no-results {
             color: #FFD700;
