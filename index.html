@@ -6,75 +6,246 @@
     <title>Pencarian Data VKRN</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <style>
-        /* ...[Tetap gunakan style lama di sini, tidak ada perubahan]... */
-        /* Gunakan style dari versi Anda sebelumnya */
+        body {
+            background: #181818;
+            color: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #222;
+            border-radius: 12px;
+            box-shadow: 0 6px 32px rgba(0,0,0,0.2);
+            padding: 32px 24px 24px 24px;
+        }
+        h1 {
+            color: #FFD700;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .refresh-index-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        #refreshIndexBtn {
+            background: #FFD700;
+            color: #181818;
+            border: none;
+            border-radius: 50%;
+            width: 56px;height: 56px;
+            font-size: 32px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.14);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            transition: box-shadow 0.2s, background 0.2s;
+        }
+        #refreshIndexBtn:hover {
+            background: #fff;
+            color: #FFD700;
+            box-shadow: 0 4px 14px rgba(255,215,0,0.12);
+        }
+        .refresh-index-text {
+            color: #fff;
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 8px;
+            font-weight: 500;
+            text-shadow: 0 2px 8px #FFD70033;
+        }
+        .system-status {
+            margin: 0 auto 18px auto;
+            text-align: center;
+            color: #FFD700;
+            font-size: 16px;
+            padding: 10px;
+            background: #222;
+            border-radius: 8px;
+            border: 1px solid #FFD700;
+            box-shadow: 0 2px 8px #FFD70022;
+        }
+        .error { color: #ff6565; border-color: #ff6565;}
+        .search-container input, .search-container button {
+            border-radius: 8px;
+            border: none;
+            padding: 10px;
+            margin: 0 4px 0 0;
+            font-size: 16px;
+        }
+        .search-container input {
+            width: 65%;
+            background: #fff;
+            color: #222;
+        }
+        .search-container button {
+            background: #FFD700;
+            color: #181818;
+            cursor: pointer;
+            font-weight: bold;
+        }
         .result-item {
-    border: 2px solid #3498db;
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 15px;
-    background: #f8f9fa;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.07);
-    transition: box-shadow 0.2s;
-}
-.result-item:hover {
-    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.18);
-}
+            border: 2px solid #FFD700;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 15px;
+            background: #181818;
+            box-shadow: 0 2px 12px #FFD70012;
+            color: #fff;
+        }
+        .result-item .show-program-btn {
+            background: #FFD700;
+            color: #181818;
+            border-radius: 8px;
+            border: none;
+            padding: 8px 16px;
+            margin-top: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 2px 8px #FFD70033;
+        }
+        .initialization-overlay {
+            display: none;
+            position: fixed;
+            top:0; left:0; width:100vw; height:100vh;
+            background: rgba(24,24,24,0.98);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .initialization-content {
+            background: #222;
+            border-radius: 16px;
+            padding: 40px 32px 32px 32px;
+            box-shadow: 0 8px 40px #FFD70044;
+            text-align: center;
+            color: #FFD700;
+            width: 350px;
+        }
+        .init-spinner {
+            margin: 0 auto 22px auto;
+            width: 56px;
+            height: 56px;
+            border: 6px solid #FFD700;
+            border-top: 6px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .init-text {
+            font-size: 22px;
+            font-weight: bold;
+            color: #FFD700;
+            margin-bottom: 10px;
+        }
+        .init-subtext {
+            font-size: 16px;
+            color: #fff;
+            margin-bottom: 22px;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 16px;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 14px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FFD700 65%, #fff 100%);
+            transition: width 0.3s;
+        }
+        .progress-text {
+            color: #FFD700;
+            font-size: 16px;
+        }
+        .search-again-container { display:none; }
+        .search-again-container.show { display:block;}
+        .search-container.hidden { display:none; }
+        .no-results {
+            color: #FFD700;
+            text-align: center;
+            margin-top: 22px;
+            font-size: 18px;
+        }
+        .results-count {
+            color: #FFD700;
+            margin-bottom: 12px;
+        }
+        .pdf-page {
+            margin: 24px 0;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px #FFD70033;
+            background: #222;
+            padding: 8px;
+        }
+        .pdf-canvas {
+            border-radius: 8px;
+            background: #fff;
+            display: block;
+            margin: 0 auto;
+        }
+        .highlight-overlay {
+            position: absolute;
+            background: rgba(255, 215, 0, 0.6);
+            border-radius: 4px;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .error-message {
+            color: #ff6565;
+            text-align: center;
+            font-size: 18px;
+            margin-top: 18px;
+            background: #222;
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid #ff6565;
+        }
     </style>
 </head>
 <body>
-    <!-- Overlay inisialisasi -->
-    <div class="initialization-overlay" id="initOverlay" style="display:none">
+    <!-- Overlay indexing -->
+    <div class="initialization-overlay" id="initOverlay">
         <div class="initialization-content">
             <div class="init-spinner"></div>
-            <div class="init-text">Memuat Sistem Pencarian</div>
-            <div class="init-subtext">Sedang mengindex semua file PDF untuk pencarian yang lebih cepat...</div>
+            <div class="init-text">Indexing PDF Data...</div>
+            <div class="init-subtext" id="initSubtext">Sedang mengindex file PDF, mohon tunggu beberapa saat.</div>
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
             <div class="progress-text" id="progressText">0% - Memuat...</div>
         </div>
     </div>
-
     <div class="container">
-        <h1 style="margin-bottom:10px;">Pencarian Data VKRN</h1>
-        <!-- Tombol refresh index di atas kolom pencarian -->
-        <button id="refreshIndexBtn" style="
-            display:inline-block;
-            background:#3498db;
-            color:white;
-            border:none;
-            border-radius:50%;
-            width:45px;height:45px;
-            font-size:25px;
-            cursor:pointer;
-            margin-bottom:15px;
-            box-shadow:0 2px 6px rgba(0,0,0,0.1);
-            " title="Refresh Index">🔄</button>
-        <span style="margin-left:10px;color:#7f8c8d;font-size:15px;">Klik untuk memulai indexing data</span>
-        
-        <!-- Status sistem -->
-        <div class="system-status show error" id="systemStatus">
-            ⚠️ Sistem belum di-index. Klik tombol 🔄 untuk memulai indexing data.
+        <h1>Pencarian Data VKRN</h1>
+        <!-- Refresh index icon & text -->
+        <div class="refresh-index-wrapper" id="refreshIndexWrapper" style="display:none;">
+            <button id="refreshIndexBtn" title="Refresh Index">🔄</button>
+            <div class="refresh-index-text">Klik untuk memulai indexing data</div>
         </div>
-        
-        <!-- Container pencarian awal -->
+        <div class="system-status show error" id="systemStatus">
+            ⚠️ Sistem belum di-index.
+        </div>
+        <!-- Search -->
         <div class="search-container" id="searchContainer">
             <input type="text" id="searchInput" placeholder="Masukkan kata kunci pencarian...">
             <button id="searchButton">Cari</button>
         </div>
-        
-        <!-- Container cari lagi -->
         <div class="search-again-container" id="searchAgainContainer">
             <button class="search-again-btn" id="searchAgainBtn">🔍 Cari Lagi</button>
         </div>
-        
         <div id="resultsContainer"></div>
-        <div id="pdfContainer">
+        <div id="pdfContainer" style="display:none;">
             <div class="pdf-viewer" id="pdfViewer"></div>
         </div>
     </div>
-
     <script>
         // Variabel global
         let csvData = [];
@@ -83,28 +254,23 @@
         let foundPages = [];
         let devicePixelRatio = window.devicePixelRatio || 1;
         let hasSearchResults = false;
-        
-        // Database offline untuk pencarian cepat
         let pdfDatabase = new Map(); // Menyimpan objek PDF yang sudah dimuat
         let textIndex = new Map(); // Index teks dari semua PDF
         let pageCache = new Map(); // Cache halaman yang sudah di-render
         let isSystemReady = false;
-        
-        // Daftar file PDF yang tersedia
+        // Daftar file PDF yang tersedia (ubah sesuai kebutuhan Anda)
         const availablePDFs = [
             { file: 'pdf/CR_PK_TOKEN_LPB_kolektif-KRN KEJAJAR.pdf', name: 'CR PK TOKEN LPB Kolektif KRN KEJAJAR', id: 'pdf1' },
             { file: 'pdf/KRN KEJAJAR.pdf', name: 'KRN KEJAJAR', id: 'pdf2' },
             { file: 'pdf/KRN KEJAJAR160824.PDF', name: 'KRN KEJAJAR 160824', id: 'pdf3' },
             { file: 'pdf/TOKEN JAMAL 160824.pdf', name: 'TOKEN JAMAL 160824', id: 'pdf4' }
         ];
-        
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-        
+
         function updateProgress(percentage, text) {
             document.getElementById('progressFill').style.width = percentage + '%';
             document.getElementById('progressText').textContent = `${percentage}% - ${text}`;
         }
-        
         function showSystemStatus(message, isError = false) {
             const systemStatus = document.getElementById('systemStatus');
             systemStatus.textContent = message;
@@ -113,12 +279,24 @@
                 setTimeout(() => { systemStatus.classList.remove('show'); }, 5000);
             }
         }
-        
+        // --- Check cache index on load ---
+        function checkIndexCache() {
+            if (loadIndexFromStorage()) {
+                isSystemReady = true;
+                document.getElementById('refreshIndexWrapper').style.display = "none";
+                showSystemStatus(`✅ Sistem siap! Database PDF sudah diindex.`);
+            } else {
+                isSystemReady = false;
+                document.getElementById('refreshIndexWrapper').style.display = "flex";
+                showSystemStatus('⚠️ Sistem belum di-index. Silakan klik tombol di bawah untuk memulai indexing data.', true);
+            }
+        }
+        // --- Overlay indexing khusus PDF ---
         async function initializeSystem() {
             document.getElementById('initOverlay').style.display = 'flex';
-            updateProgress(5, 'Memuat data CSV...');
+            document.getElementById('initSubtext').textContent = "Sedang mengindex file PDF, mohon tunggu beberapa saat.";
+            updateProgress(5, 'Indexing PDF...');
             try {
-                await loadCSVData();
                 let totalProgress = 0;
                 const progressPerPDF = 90 / availablePDFs.length;
                 for (let i = 0; i < availablePDFs.length; i++) {
@@ -131,28 +309,24 @@
                         updateProgress(10 + (i * progressPerPDF) + (progressPerPDF * 0.3), `Mengindex teks ${pdfInfo.name}...`);
                         await indexPDFText(pdf, pdfInfo);
                         updateProgress(10 + ((i + 1) * progressPerPDF), `Selesai memuat ${pdfInfo.name}`);
-                    } catch (error) {
-                        console.error(`Error loading ${pdfInfo.file}:`, error);
-                    }
+                    } catch (error) { console.error(`Error loading ${pdfInfo.file}:`, error); }
                 }
-                updateProgress(95, 'Finalisasi sistem...');
-                await saveIndexToStorage();
                 updateProgress(100, 'Sistem siap!');
+                await saveIndexToStorage();
                 setTimeout(() => {
                     document.getElementById('initOverlay').style.display = 'none';
                     isSystemReady = true;
-                    showSystemStatus(`✅ Sistem siap! ${availablePDFs.length} file PDF telah diindex. Database berisi ${textIndex.size} entri pencarian.`);
+                    document.getElementById('refreshIndexWrapper').style.display = "none";
+                    showSystemStatus(`✅ Sistem siap! Database PDF sudah diindex.`);
                 }, 1000);
             } catch (error) {
-                console.error('Error during initialization:', error);
-                updateProgress(100, 'Error inisialisasi');
+                updateProgress(100, 'Error Inisialisasi');
                 setTimeout(() => {
                     document.getElementById('initOverlay').style.display = 'none';
-                    showSystemStatus('❌ Terjadi error saat inisialisasi sistem. Beberapa fitur mungkin tidak berfungsi optimal.', true);
+                    showSystemStatus('❌ Error indexing PDF.', true);
                 }, 2000);
             }
         }
-        
         async function indexPDFText(pdf, pdfInfo) {
             const totalPages = pdf.numPages;
             for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
@@ -167,7 +341,6 @@
                 }
             }
         }
-        
         async function saveIndexToStorage() {
             try {
                 const indexData = {};
@@ -182,7 +355,6 @@
                 console.warn('Gagal menyimpan index ke localStorage:', error);
             }
         }
-        
         function loadIndexFromStorage() {
             try {
                 const stored = localStorage.getItem('vkrn_text_index');
@@ -201,7 +373,6 @@
             }
             return false;
         }
-        
         function instantSearch(searchTerm) {
             const results = [];
             const searchTermLower = searchTerm.toLowerCase();
@@ -212,7 +383,6 @@
             }
             return results;
         }
-        
         async function loadCSVData() {
             try {
                 const response = await fetch('vkrn.csv');
@@ -234,7 +404,6 @@
                 throw error;
             }
         }
-        
         function toggleSearchDisplay(showResults = false) {
             const searchContainer = document.getElementById('searchContainer');
             const searchAgainContainer = document.getElementById('searchAgainContainer');
@@ -248,7 +417,6 @@
                 hasSearchResults = false;
             }
         }
-
         function searchAgain() {
             toggleSearchDisplay(false);
             document.getElementById('resultsContainer').innerHTML = '';
@@ -256,7 +424,6 @@
             document.getElementById('searchInput').value = '';
             document.getElementById('searchInput').focus();
         }
-        
         function performSearch(keyword) {
             if (keyword.trim() === "") {
                 alert('Silakan masukkan kata kunci pencarian');
@@ -282,7 +449,6 @@
                 toggleSearchDisplay(true);
             }
         }
-        
         function displayResults(results) {
             const resultsContainer = document.getElementById('resultsContainer');
             if (results.length === 0) {
@@ -307,7 +473,6 @@
             });
             resultsContainer.innerHTML = html;
         }
-        
         async function showProgram(idpel) {
             const pdfContainer = document.getElementById('pdfContainer');
             const pdfViewer = document.getElementById('pdfViewer');
@@ -323,10 +488,9 @@
                 pdfViewer.innerHTML = `<div class="error-message">🔍 IDPEL "${idpel}" tidak ditemukan dalam database PDF</div>`;
                 return;
             }
-            pdfViewer.innerHTML = '<div style="text-align: center; padding: 20px; color: #7f8c8d;">⚡ Memuat hasil pencarian instan...</div>';
+            pdfViewer.innerHTML = '<div style="text-align: center; padding: 20px; color: #FFD700;">⚡ Memuat hasil pencarian instan...</div>';
             await renderFoundPages(searchResults);
         }
-        
         async function renderFoundPages(searchResults) {
             const pdfViewer = document.getElementById('pdfViewer');
             pdfViewer.innerHTML = '';
@@ -346,9 +510,10 @@
                         const containerWidth = pdfViewer.clientWidth - 40;
                         const baseViewport = page.getViewport({ scale: 1 });
                         const scale = containerWidth / baseViewport.width;
-                        const canvas = await renderPageToCanvas(page, scale);
                         const pageDiv = document.createElement('div');
                         pageDiv.className = 'pdf-page';
+                        pageDiv.style.position = 'relative';
+                        const canvas = await renderPageToCanvas(page, scale);
                         pageDiv.appendChild(canvas);
                         await highlightTextInPage(page, pageDiv, page.getViewport({ scale: scale }), searchIdpel);
                         pdfViewer.appendChild(pageDiv);
@@ -358,7 +523,6 @@
                 }
             }
         }
-        
         async function renderPageToCanvas(page, scale) {
             const scaledViewport = page.getViewport({ scale: scale });
             const canvas = document.createElement('canvas');
@@ -380,7 +544,6 @@
             await page.render(renderContext).promise;
             return canvas;
         }
-        
         async function highlightTextInPage(page, pageDiv, viewport, searchText) {
             try {
                 const textContent = await page.getTextContent();
@@ -402,9 +565,9 @@
                 console.error('Error highlighting text:', error);
             }
         }
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            // Tidak ada initializeSystem otomatis
+        document.addEventListener('DOMContentLoaded', async () => {
+            checkIndexCache();
+            await loadCSVData();
             document.getElementById('searchButton').addEventListener('click', () => {
                 const keyword = document.getElementById('searchInput').value;
                 performSearch(keyword);
@@ -417,10 +580,9 @@
             });
             document.getElementById('searchAgainBtn').addEventListener('click', searchAgain);
             document.getElementById('refreshIndexBtn').addEventListener('click', () => {
-                // Tampilkan overlay dan mulai indexing!
                 initializeSystem();
             });
         });
     </script>
 </body>
-</html>
+    </html>
