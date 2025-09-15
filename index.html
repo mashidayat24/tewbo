@@ -7,23 +7,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <style>
         body {
-            background: #181818;
-            color: #fff;
+            background: linear-gradient(135deg, #e0f1ff 0%, #b3d1ff 100%);
+            color: #181818;
             font-family: 'Segoe UI', Arial, sans-serif;
             margin: 0;
         }
         .container {
             max-width: 600px;
             margin: 40px auto;
-            background: #222;
-            border-radius: 12px;
-            box-shadow: 0 6px 32px rgba(0,0,0,0.2);
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 6px 32px rgba(0,0,0,0.10);
             padding: 32px 24px 24px 24px;
+            border: 2px solid #FFD700;
         }
         h1 {
-            color: #FFD700;
+            color: #181818;
             text-align: center;
             margin-bottom: 16px;
+            font-weight: bold;
         }
         .refresh-index-wrapper {
             display: flex;
@@ -32,9 +34,9 @@
             margin-bottom: 16px;
         }
         #refreshIndexBtn {
-            background: #FFD700;
-            color: #181818;
-            border: none;
+            background: #181818;
+            color: #fff;
+            border: 2px solid #FFD700;
             border-radius: 50%;
             width: 56px;height: 56px;
             font-size: 32px;
@@ -48,11 +50,11 @@
         }
         #refreshIndexBtn:hover {
             background: #fff;
-            color: #FFD700;
-            box-shadow: 0 4px 14px rgba(255,215,0,0.12);
+            color: #181818;
+            border-color: #FFD700;
         }
         .refresh-index-text {
-            color: #fff;
+            color: #181818;
             font-size: 18px;
             text-align: center;
             margin-bottom: 8px;
@@ -62,81 +64,91 @@
         .system-status {
             margin: 0 auto 18px auto;
             text-align: center;
-            color: #FFD700;
+            color: #181818;
             font-size: 16px;
             padding: 10px;
-            background: #222;
+            background: #fff;
             border-radius: 8px;
-            border: 1px solid #FFD700;
+            border: 2px solid #FFD700;
             box-shadow: 0 2px 8px #FFD70022;
         }
         .error { color: #ff6565; border-color: #ff6565;}
         .search-container input, .search-container button {
             border-radius: 8px;
             border: none;
-            padding: 10px;
-            margin: 0 4px 0 0;
             font-size: 16px;
         }
         .search-container input {
-            width: 65%;
+            width: 100%;
+            border-radius: 8px;
+            border: 2px solid #FFD700;
+            padding: 14px;
             background: #fff;
-            color: #222;
-        }
-        .search-container button {
-            background: #FFD700;
             color: #181818;
-            cursor: pointer;
+            margin-bottom: 0;
+            box-sizing: border-box;
+        }
+        .search-btn-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 12px;
+        }
+        .search-container button, .show-program-btn, .search-again-btn {
+            background: #181818;
+            color: #fff;
+            border: 2px solid #FFD700;
+            border-radius: 8px;
+            font-size: 16px;
             font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            padding: 12px 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.14);
+        }
+        .search-container button:hover, .show-program-btn:hover, .search-again-btn:hover {
+            background: #fff;
+            color: #181818;
+            border-color: #FFD700;
         }
         .result-item {
             border: 2px solid #FFD700;
             border-radius: 8px;
             padding: 16px;
             margin-bottom: 15px;
-            background: #181818;
+            background: #fff;
             box-shadow: 0 2px 12px #FFD70012;
-            color: #fff;
+            color: #181818;
         }
         .result-item .show-program-btn {
-            background: #FFD700;
-            color: #181818;
-            border-radius: 8px;
-            border: none;
-            padding: 8px 16px;
             margin-top: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 2px 8px #FFD70033;
-        }
-        .result-item .show-program-btn:hover {
-            background: #fff;
-            color: #FFD700;
+            font-size: 15px;
         }
         .initialization-overlay {
             display: none;
             position: fixed;
             top:0; left:0; width:100vw; height:100vh;
-            background: rgba(24,24,24,0.98);
+            background: rgba(224,241,255,0.98);
             z-index: 1000;
             justify-content: center;
             align-items: center;
         }
         .initialization-content {
-            background: #222;
+            background: #fff;
             border-radius: 16px;
             padding: 40px 32px 32px 32px;
             box-shadow: 0 8px 40px #FFD70044;
             text-align: center;
-            color: #FFD700;
+            color: #181818;
             width: 350px;
+            border: 2px solid #FFD700;
         }
         .init-spinner {
             margin: 0 auto 22px auto;
             width: 56px;
             height: 56px;
             border: 6px solid #FFD700;
-            border-top: 6px solid #fff;
+            border-top: 6px solid #181818;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -144,12 +156,12 @@
         .init-text {
             font-size: 22px;
             font-weight: bold;
-            color: #FFD700;
+            color: #181818;
             margin-bottom: 10px;
         }
         .init-subtext {
             font-size: 16px;
-            color: #fff;
+            color: #181818;
             margin-bottom: 22px;
         }
         .progress-bar {
@@ -159,6 +171,7 @@
             border-radius: 8px;
             overflow: hidden;
             margin-bottom: 14px;
+            border: 2px solid #FFD700;
         }
         .progress-fill {
             height: 100%;
@@ -166,10 +179,9 @@
             transition: width 0.3s;
         }
         .progress-text {
-            color: #FFD700;
+            color: #181818;
             font-size: 16px;
         }
-        /* EDIT: Tombol Cari Lagi di tengah, besar, dan jarak atas-bawah 5px */
         .search-again-container {
             display: none;
             text-align: center;
@@ -180,48 +192,36 @@
             display: block;
         }
         .search-again-btn {
-            background: #FFD700;
-            color: #181818;
-            border: none;
-            border-radius: 12px;
-            padding: 16px 32px;
-            font-size: 22px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 16px #FFD70033;
             margin-top: 5px;
             margin-bottom: 5px;
-            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-            display: inline-block;
-        }
-        .search-again-btn:hover {
-            background: #fff;
-            color: #FFD700;
-            box-shadow: 0 8px 24px #FFD70044;
+            font-size: 18px;
         }
         .search-container.hidden { display:none; }
         .no-results {
-            color: #FFD700;
+            color: #181818;
             text-align: center;
             margin-top: 22px;
             font-size: 18px;
         }
         .results-count {
-            color: #FFD700;
+            color: #181818;
             margin-bottom: 12px;
         }
         .pdf-page {
             margin: 24px 0;
             border-radius: 12px;
             box-shadow: 0 2px 12px #FFD70033;
-            background: #222;
+            background: #fff;
             padding: 8px;
+            border: 2px solid #FFD700;
+            position: relative;
         }
         .pdf-canvas {
             border-radius: 8px;
             background: #fff;
             display: block;
             margin: 0 auto;
+            border: 2px solid #FFD700;
         }
         .highlight-overlay {
             position: absolute;
@@ -235,10 +235,10 @@
             text-align: center;
             font-size: 18px;
             margin-top: 18px;
-            background: #222;
+            background: #fff;
             border-radius: 8px;
             padding: 12px;
-            border: 1px solid #ff6565;
+            border: 2px solid #FFD700;
         }
     </style>
 </head>
@@ -268,7 +268,9 @@
         <!-- Search -->
         <div class="search-container" id="searchContainer">
             <input type="text" id="searchInput" placeholder="Masukkan kata kunci pencarian...">
-            <button id="searchButton">Cari</button>
+            <div class="search-btn-wrapper">
+                <button id="searchButton">Cari</button>
+            </div>
         </div>
         <div class="search-again-container" id="searchAgainContainer">
             <button class="search-again-btn" id="searchAgainBtn">🔍 Cari Lagi</button>
@@ -480,12 +482,14 @@
             if (results.length > 0) {
                 toggleSearchDisplay(true);
             }
+            // Selalu tampilkan PDF di bawah hasil CSV jika ada pencarian
+            document.getElementById('pdfContainer').style.display = 'block';
+            showPDFSearch(keyword);
         }
         function displayResults(results) {
             const resultsContainer = document.getElementById('resultsContainer');
             if (results.length === 0) {
                 resultsContainer.innerHTML = '<div class="no-results">Tidak ditemukan data yang sesuai</div>';
-                document.getElementById('pdfContainer').style.display = 'none';
                 return;
             }
             let html = `<div class="results-count">📊 Ditemukan ${results.length} data:</div>`;
@@ -506,24 +510,26 @@
             resultsContainer.innerHTML = html;
         }
         async function showProgram(idpel) {
+            searchIdpel = idpel;
+            showPDFSearch(idpel);
+        }
+        async function showPDFSearch(keyword) {
             const pdfContainer = document.getElementById('pdfContainer');
             const pdfViewer = document.getElementById('pdfViewer');
             if (!isSystemReady) {
-                alert('Sistem masih dalam proses inisialisasi. Mohon tunggu sebentar...');
+                pdfContainer.style.display = 'none';
                 return;
             }
-            searchIdpel = idpel;
             pdfContainer.style.display = 'block';
-            pdfContainer.scrollIntoView({ behavior: 'smooth' });
-            const searchResults = instantSearch(idpel);
+            pdfViewer.innerHTML = '<div style="text-align: center; padding: 20px; color: #FFD700;">⚡ Memuat hasil pencarian instan...</div>';
+            const searchResults = instantSearch(keyword);
             if (searchResults.length === 0) {
-                pdfViewer.innerHTML = `<div class="error-message">🔍 IDPEL "${idpel}" tidak ditemukan dalam database PDF</div>`;
+                pdfViewer.innerHTML = `<div class="error-message">🔍 "${keyword}" tidak ditemukan dalam database PDF</div>`;
                 return;
             }
-            pdfViewer.innerHTML = '<div style="text-align: center; padding: 20px; color: #FFD700;">⚡ Memuat hasil pencarian instan...</div>';
-            await renderFoundPages(searchResults);
+            await renderFoundPages(searchResults, keyword);
         }
-        async function renderFoundPages(searchResults) {
+        async function renderFoundPages(searchResults, keyword) {
             const pdfViewer = document.getElementById('pdfViewer');
             pdfViewer.innerHTML = '';
             const groupedResults = new Map();
@@ -547,7 +553,7 @@
                         pageDiv.style.position = 'relative';
                         const canvas = await renderPageToCanvas(page, scale);
                         pageDiv.appendChild(canvas);
-                        await highlightTextInPage(page, pageDiv, page.getViewport({ scale: scale }), searchIdpel);
+                        await highlightTextInPage(page, pageDiv, page.getViewport({ scale: scale }), keyword);
                         pdfViewer.appendChild(pageDiv);
                     } catch (error) {
                         console.error(`Error rendering page ${pageResult.pageNumber}:`, error);
