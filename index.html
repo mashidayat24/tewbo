@@ -3,814 +3,376 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VKRN ULP WONOSOBO</title>
+    <title>VKRN ULP Wonosobo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-            min-height: 100vh;
-            padding: 20px;
+            font-family: 'Poppins', sans-serif;
         }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
-            border: 3px solid black;
-            position: relative;
+        /* Styling for golden border */
+        .golden-border {
+            border: 4px solid;
+            border-image-slice: 1;
+            border-image-source: linear-gradient(to right, #333, #FFD700, #333);
         }
 
-        .container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 100%;
-            border: 2px solid #FFD700;
-            border-radius: 18px;
-            pointer-events: none;
-            margin: 3px;
+        /* Animation for floating button */
+        .fab-spin:hover {
+            transform: rotate(360deg);
+            transition: transform 0.5s ease-in-out;
         }
 
-        .header {
-            background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%);
-            padding: 30px 20px;
-            text-align: center;
-            border-bottom: 3px solid black;
-            position: relative;
-        }
-
-        .header::after {
-            content: '';
-            position: absolute;
-            bottom: -3px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: #FFD700;
-        }
-
-        h1 {
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            letter-spacing: 2px;
-        }
-
-        .refresh-btn {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: white;
-            border: 2px solid black;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-        }
-
-        .refresh-btn:hover {
-            transform: translateY(-50%) rotate(180deg);
-            background: #FFD700;
-        }
-
-        .refresh-btn:active {
-            transform: translateY(-50%) rotate(180deg) scale(0.9);
-        }
-
-        .refresh-icon {
-            font-size: 24px;
-            color: #1976d2;
-        }
-
-        .refresh-btn.loading .refresh-icon {
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .indexing-info {
-            background: #e3f2fd;
-            padding: 15px;
-            border-radius: 10px;
-            border: 2px solid black;
-            margin-bottom: 20px;
-            text-align: center;
-            position: relative;
-        }
-
-        .indexing-info::before {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            right: 2px;
-            bottom: 2px;
-            border: 1px solid #FFD700;
-            border-radius: 8px;
-            pointer-events: none;
-        }
-
-        .indexing-status {
-            font-weight: 600;
-            color: #1976d2;
-        }
-
-        .indexing-detail {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .content {
-            padding: 30px 20px;
-        }
-
-        .search-box {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            color: #1976d2;
-            font-weight: 600;
-            font-size: 16px;
-        }
-
-        input[type="text"], input[type="tel"], textarea {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid black;
-            border-radius: 10px;
-            font-size: 16px;
-            outline: none;
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        input[type="text"]:focus, input[type="tel"]:focus, textarea:focus {
-            border-color: #1976d2;
-            box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1), inset 0 0 0 1px #FFD700;
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid black;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            right: 2px;
-            bottom: 2px;
-            border: 1px solid #FFD700;
-            border-radius: 8px;
-            pointer-events: none;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.4);
-        }
-
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-
-        .btn-secondary {
-            background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%);
-            color: black;
-            margin-top: 15px;
-        }
-
-        .btn-secondary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
-            color: white;
-            margin-top: 20px;
-        }
-
-        .btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
-        }
-
-        .results {
-            margin-top: 20px;
-            animation: fadeIn 0.5s;
+        /* Fade-in animation */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        .table-container {
-            border: 2px solid black;
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2563eb;
             border-radius: 10px;
-            margin-bottom: 20px;
-            position: relative;
-            background: white;
         }
-
-        .table-container::before {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            right: 2px;
-            bottom: 2px;
-            border: 1px solid #FFD700;
-            border-radius: 8px;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .table-vertical {
-            width: 100%;
-            padding: 15px;
-        }
-
-        .table-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .table-row:last-child {
-            border-bottom: none;
-        }
-
-        .table-label {
-            font-weight: 600;
-            color: #1976d2;
-            min-width: 80px;
-        }
-
-        .table-value {
-            flex: 1;
-            text-align: right;
-            color: #333;
-        }
-
-        .pdf-viewer {
-            margin-top: 20px;
-            border: 2px solid black;
-            border-radius: 10px;
-            padding: 20px;
-            background: #f5f5f5;
-            text-align: center;
-            position: relative;
-        }
-
-        .pdf-viewer::before {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            right: 2px;
-            bottom: 2px;
-            border: 1px solid #FFD700;
-            border-radius: 8px;
-            pointer-events: none;
-        }
-
-        .pdf-icon {
-            font-size: 48px;
-            color: #d32f2f;
-            margin-bottom: 10px;
-        }
-
-        .alert {
-            padding: 15px;
-            border-radius: 10px;
-            border: 2px solid black;
-            margin-top: 20px;
-            position: relative;
-            animation: shake 0.5s;
-        }
-
-        .alert::before {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            right: 2px;
-            bottom: 2px;
-            border: 1px solid #FFD700;
-            border-radius: 8px;
-            pointer-events: none;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-
-        .alert-warning {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            border: 3px solid black;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            z-index: 1000;
-            text-align: center;
-            min-width: 280px;
-            transition: transform 0.3s;
-        }
-
-        .popup::before {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            right: 3px;
-            bottom: 3px;
-            border: 2px solid #FFD700;
-            border-radius: 12px;
-            pointer-events: none;
-        }
-
-        .popup.show {
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        .popup-success {
-            color: #4caf50;
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-
-        .popup-error {
-            color: #f44336;
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            z-index: 999;
-        }
-
-        .overlay.show {
-            display: block;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .location-info {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-            font-style: italic;
-        }
-
-        @media (max-width: 480px) {
-            .content {
-                padding: 20px 15px;
-            }
-
-            h1 {
-                font-size: 20px;
-            }
-
-            th, td {
-                padding: 8px 5px;
-                font-size: 12px;
-            }
-
-            .btn {
-                padding: 12px;
-                font-size: 16px;
-            }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1d4ed8;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>VKRN ULP WONOSOBO</h1>
-            <button class="refresh-btn" onclick="indexData()" title="Refresh & Indexing Data">
-                <div class="refresh-icon">↻</div>
-            </button>
-        </div>
-        
-        <div class="content">
-            <div id="indexingInfo" class="indexing-info hidden">
-                <div class="indexing-status">⏳ Indexing data...</div>
-                <div class="indexing-detail">Mohon tunggu, sedang memuat data dari folder...</div>
-            </div>
+<body class="bg-gray-100">
 
-            <div id="searchSection">
-                <div class="search-box">
-                    <label for="searchInput">Cari Data (IDPEL / Nama / Alamat)</label>
-                    <input type="text" id="searchInput" placeholder="Masukkan kata kunci pencarian...">
+    <div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-70 flex-col items-center justify-center z-50 hidden">
+        <div class="w-16 h-16 border-4 border-t-blue-500 border-gray-200 rounded-full animate-spin"></div>
+        <p id="loading-text" class="text-white text-lg mt-4">Indexing data...</p>
+    </div>
+
+    <div id="toast-notification" class="fixed top-5 right-5 bg-green-500 text-white py-2 px-5 rounded-lg shadow-lg transform translate-x-[120%] transition-transform duration-500 z-40">
+        <p id="toast-message">Aksi berhasil!</p>
+    </div>
+
+    <div class="container mx-auto max-w-lg p-4 min-h-screen bg-white shadow-2xl flex flex-col">
+        <header class="text-center py-4 mb-4">
+            <h1 class="text-3xl font-bold text-blue-700">VKRN ULP WONOSOBO</h1>
+            <p class="text-gray-500">Sistem Verifikasi dan Pencarian Data Pelanggan</p>
+            <div class="w-1/2 h-1 bg-gradient-to-r from-black via-yellow-400 to-black mx-auto mt-2 rounded"></div>
+        </header>
+
+        <main id="app-container">
+            <div id="search-view">
+                <div class="mb-4">
+                    <label for="searchInput" class="block text-gray-700 text-sm font-bold mb-2">
+                        Masukkan ID Pelanggan (IDPEL):
+                    </label>
+                    <input type="number" id="searchInput" class="golden-border shadow appearance-none w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline rounded-lg" placeholder="Contoh: 521234567890">
                 </div>
-                <button class="btn btn-primary" onclick="searchData()">Cari</button>
+                <button id="searchButton" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-300">
+                    <i class="fas fa-search mr-2"></i> Cari Data
+                </button>
             </div>
 
-            <div id="resultsSection" class="hidden">
-                <div class="results">
-                    <div class="table-container">
-                        <div class="table-vertical" id="tableBody"></div>
+            <div id="results-view" class="hidden fade-in">
+                <div id="data-result-container" class="mb-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                    <h2 class="text-xl font-semibold mb-3 text-blue-800 border-b pb-2">Detail Data Pelanggan</h2>
+                    <div id="data-result-content"></div>
+                </div>
+
+                <div id="pdf-result-container" class="mb-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                     <h2 class="text-xl font-semibold mb-3 text-blue-800 border-b pb-2">Dokumen Terkait (PDF)</h2>
+                    <div id="pdf-result-content"></div>
+                </div>
+
+                <button id="kirimButton" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-300 mb-4">
+                    <i class="fas fa-paper-plane mr-2"></i> Kirim Update Data
+                </button>
+
+                <div id="update-form-container" class="hidden fade-in p-4 border border-gray-200 rounded-lg bg-blue-50">
+                     <h2 class="text-xl font-semibold mb-3 text-blue-800">Form Update</h2>
+                    <div class="mb-3">
+                        <label for="keteranganInput" class="block text-gray-700 text-sm font-bold mb-2">Keterangan:</label>
+                        <textarea id="keteranganInput" rows="3" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Masukkan keterangan tambahan..."></textarea>
                     </div>
+                    <div class="mb-3">
+                        <label for="nomerHpInput" class="block text-gray-700 text-sm font-bold mb-2">Nomer HP Pelanggan:</label>
+                        <input type="tel" id="nomerHpInput" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Contoh: 08123456789">
+                    </div>
+                    <div class="mb-3">
+                        <label for="lokasiInput" class="block text-gray-700 text-sm font-bold mb-2">Lokasi:</label>
+                        <div class="flex items-center">
+                            <input type="text" id="lokasiInput" class="shadow appearance-none border rounded-l-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" readonly>
+                            <button id="getLocationButton" class="bg-blue-500 hover:bg-blue-600 text-white font-bold p-2 rounded-r-lg">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button id="updateButton" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-300">
+                        <i class="fas fa-sync-alt mr-2"></i> Update Data
+                    </button>
+                </div>
 
-                    <button class="btn btn-secondary" onclick="showForm()">Kirim</button>
-                </div>
-                <button class="btn btn-primary" onclick="resetSearch()">Cari Lagi</button>
-                
-                <div id="pdfSection"></div>
-                <div id="alertSection"></div>
+                <button id="searchAgainButton" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-300 mt-4">
+                    <i class="fas fa-undo mr-2"></i> Cari Lagi
+                </button>
             </div>
+        </main>
+        
+        <footer class="text-center text-gray-500 text-sm py-4 mt-auto">
+            <p>&copy;TELWBO 2025</p>
+        </footer>
 
-            <div id="formSection" class="hidden">
-                <div class="form-group">
-                    <label for="keterangan">Keterangan</label>
-                    <textarea id="keterangan" placeholder="Masukkan keterangan..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="nomorHP">Nomor HP Pelanggan</label>
-                    <input type="tel" id="nomorHP" placeholder="Contoh: 08123456789">
-                </div>
-                <div class="form-group">
-                    <label for="lokasi">Lokasi</label>
-                    <input type="text" id="lokasi" placeholder="Mendapatkan lokasi..." readonly>
-                    <div class="location-info" id="locationInfo">Klik tombol Update untuk mendapatkan lokasi otomatis</div>
-                </div>
-                <button class="btn btn-success" onclick="updateData()">Update</button>
-                <button class="btn btn-primary" onclick="backToResults()">Kembali</button>
-            </div>
-        </div>
     </div>
 
-    <div class="overlay" id="overlay"></div>
-    <div class="popup" id="popup">
-        <div id="popupIcon"></div>
-        <div id="popupMessage"></div>
-    </div>
+    <button id="refreshButton" class="fab-spin fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-800 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center text-2xl transition-all duration-300">
+        <i class="fas fa-sync"></i>
+    </button>
 
     <script>
-        // Data demo (simulasi database)
-        let demoData = [
-            { idpel: '123456789012', nama: 'Budi Santoso', alamat: 'Jl. Merdeka No. 10', tarif: 'R1/900VA', keterangan: '', nomorHP: '', lokasi: '' },
-            { idpel: '234567890123', nama: 'Siti Aminah', alamat: 'Jl. Sudirman No. 25', tarif: 'R1/1300VA', keterangan: '', nomorHP: '', lokasi: '' },
-            { idpel: '345678901234', nama: 'Ahmad Rizki', alamat: 'Jl. Gatot Subroto No. 5', tarif: 'R1/2200VA', keterangan: '', nomorHP: '', lokasi: '' },
-            { idpel: '456789012345', nama: 'Dewi Lestari', alamat: 'Jl. Diponegoro No. 15', tarif: 'R1/900VA', keterangan: '', nomorHP: '', lokasi: '' },
-            { idpel: '567890123456', nama: 'Eko Prasetyo', alamat: 'Jl. Ahmad Yani No. 30', tarif: 'R2/3500VA', keterangan: '', nomorHP: '', lokasi: '' }
+        // --- DATABASE SIMULATION ---
+        let mockDatabase = [
+            { idpel: '521111111111', nama: 'BUDI SANTOSO', alamat: 'JL. PAHLAWAN NO. 1, WONOSOBO', tarif: 'R1/900VA' },
+            { idpel: '522222222222', nama: 'SITI AMINAH', alamat: 'DS. KALIJERUK RT 2 RW 1, KERTEK', tarif: 'R1/1300VA', keterangan: 'Rumah kosong', nomer_hp: '081234567890' },
+            { idpel: '523333333333', nama: 'AGUS SETIAWAN', alamat: 'JL. DIPO NEGORO NO. 25, WONOSOBO', tarif: 'B2/23000VA' },
+            { idpel: '524444444444', nama: 'DEWI LESTARI', alamat: 'KP. JARAKSARI NO. 10, WONOSOBO', tarif: 'R1/900VA', lokasi: '-7.359, 109.901' },
         ];
+        // Simulation of PDF to text indexing result. Key is IDPEL.
+        let pdfTextIndex = {};
+        
+        // Global variable to store currently displayed record
+        let currentRecord = null;
 
-        // Data PDF yang tersedia (simulasi)
-        const availablePDFs = ['123456789012', '234567890123', '456789012345'];
+        // --- DOM ELEMENTS ---
+        const searchView = document.getElementById('search-view');
+        const resultsView = document.getElementById('results-view');
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const dataResultContent = document.getElementById('data-result-content');
+        const pdfResultContent = document.getElementById('pdf-result-content');
+        const kirimButton = document.getElementById('kirimButton');
+        const updateFormContainer = document.getElementById('update-form-container');
+        const keteranganInput = document.getElementById('keteranganInput');
+        const nomerHpInput = document.getElementById('nomerHpInput');
+        const lokasiInput = document.getElementById('lokasiInput');
+        const getLocationButton = document.getElementById('getLocationButton');
+        const updateButton = document.getElementById('updateButton');
+        const refreshButton = document.getElementById('refreshButton');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const loadingText = document.getElementById('loading-text');
+        const searchAgainButton = document.getElementById('searchAgainButton');
 
-        let currentSearchResult = null;
-        let isIndexed = false;
+        // --- FUNCTIONS ---
 
-        // Auto indexing saat pertama kali buka website
-        window.addEventListener('load', function() {
-            if (!isIndexed) {
-                indexData();
-            }
-        });
-
-        function indexData() {
-            const refreshBtn = document.querySelector('.refresh-btn');
-            const indexingInfo = document.getElementById('indexingInfo');
-            const searchSection = document.getElementById('searchSection');
+        // Function to show a toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast-notification');
+            const toastMessage = document.getElementById('toast-message');
             
-            // Tampilkan loading
-            refreshBtn.classList.add('loading');
-            indexingInfo.classList.remove('hidden');
-            searchSection.classList.add('hidden');
+            toastMessage.textContent = message;
+            toast.className = toast.className.replace(/bg-(green|red)-500/, `bg-${type === 'success' ? 'green' : 'red'}-500`);
             
-            // Simulasi proses indexing (2 detik)
+            toast.style.transform = 'translateX(0)';
             setTimeout(() => {
-                // Simulasi load data dari folder
-                console.log('Indexing data dari folder data/...');
-                console.log('Total data terindex:', demoData.length);
-                console.log('Total PDF terindex:', availablePDFs.length);
-                
-                isIndexed = true;
-                
-                // Update UI
-                indexingInfo.innerHTML = `
-                    <div class="indexing-status">✓ Indexing selesai!</div>
-                    <div class="indexing-detail">
-                        ${demoData.length} data pelanggan dan ${availablePDFs.length} file PDF berhasil dimuat
-                    </div>
-                `;
-                
-                refreshBtn.classList.remove('loading');
-                
-                // Kembali ke pencarian setelah 1.5 detik
-                setTimeout(() => {
-                    indexingInfo.classList.add('hidden');
-                    searchSection.classList.remove('hidden');
-                }, 1500);
-                
-                showPopup('success', 'Data berhasil diindex!');
-            }, 2000);
+                toast.style.transform = 'translateX(120%)';
+            }, 3000);
         }
 
-        function searchData() {
-            const query = document.getElementById('searchInput').value.trim().toLowerCase();
-            
-            if (!isIndexed) {
-                showPopup('error', 'Data belum diindex! Klik tombol refresh untuk indexing data.');
-                return;
-            }
+        // Function to handle "Indexing" (simulation)
+        function handleIndexing() {
+            loadingText.textContent = 'Indexing data...';
+            loadingOverlay.classList.remove('hidden');
+            loadingOverlay.classList.add('flex');
+
+            setTimeout(() => {
+                // Simulating "PDF to text conversion" process
+                pdfTextIndex = {
+                    '521111111111': 'Ini adalah isi dari file PDF untuk IDPEL 521111111111. Berisi riwayat pembayaran dan data teknis pelanggan Budi Santoso.',
+                    '523333333333': 'Dokumen PDF milik Agus Setiawan. Terlampir data penggunaan KWH selama 6 bulan terakhir dan detail kontrak daya bisnis.'
+                };
+                
+                loadingOverlay.classList.add('hidden');
+                loadingOverlay.classList.remove('flex');
+                showToast('Indexing data berhasil diselesaikan!');
+                console.log("PDF Index:", pdfTextIndex);
+            }, 2500); // Simulate 2.5 second process time
+        }
+        
+        // Function to search and display data
+        function handleSearch() {
+            const query = searchInput.value;
             
             if (!query) {
-                showPopup('error', 'Mohon masukkan kata kunci pencarian!');
+                showToast('IDPEL tidak boleh kosong!', 'error');
                 return;
             }
+            
+            currentRecord = mockDatabase.find(data => data.idpel === query);
 
-            // Cari data
-            const results = demoData.filter(item => 
-                item.idpel.toLowerCase().includes(query) ||
-                item.nama.toLowerCase().includes(query) ||
-                item.alamat.toLowerCase().includes(query)
-            );
-
-            if (results.length === 0) {
-                showPopup('error', 'Data tidak ditemukan!');
-                return;
+            if (currentRecord) {
+                displayResults(currentRecord);
+                searchView.classList.add('hidden');
+                resultsView.classList.remove('hidden');
+                refreshButton.classList.add('hidden'); // Hide refresh button
+            } else {
+                showToast('Data pelanggan tidak ditemukan!', 'error');
             }
-
-            // Simpan hasil pencarian
-            currentSearchResult = results[0];
-
-            // Tampilkan hasil
-            displayResults(results);
-
-            // Sembunyikan search section, tampilkan results section
-            document.getElementById('searchSection').classList.add('hidden');
-            document.getElementById('resultsSection').classList.remove('hidden');
         }
-
-        function displayResults(results) {
-            const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = '';
-
-            const item = results[0];
-            tbody.innerHTML = `
-                <div class="table-row">
-                    <div class="table-label">IDPEL:</div>
-                    <div class="table-value">${item.idpel}</div>
-                </div>
-                <div class="table-row">
-                    <div class="table-label">Nama:</div>
-                    <div class="table-value">${item.nama}</div>
-                </div>
-                <div class="table-row">
-                    <div class="table-label">Alamat:</div>
-                    <div class="table-value">${item.alamat}</div>
-                </div>
-                <div class="table-row">
-                    <div class="table-label">Tarif:</div>
-                    <div class="table-value">${item.tarif}</div>
+        
+        // Function to display results in the UI
+        function displayResults(record) {
+            // Display customer data
+            dataResultContent.innerHTML = `
+                <div class="grid grid-cols-3 gap-2 text-sm">
+                    <strong class="col-span-1">IDPEL</strong><span class="col-span-2">: ${record.idpel}</span>
+                    <strong class="col-span-1">Nama</strong><span class="col-span-2">: ${record.nama}</span>
+                    <strong class="col-span-1">Alamat</strong><span class="col-span-2">: ${record.alamat}</span>
+                    <strong class="col-span-1">Tarif</strong><span class="col-span-2">: ${record.tarif}</span>
+                    <strong class="col-span-1">Keterangan</strong><span class="col-span-2">: ${record.keterangan || '-'}</span>
+                    <strong class="col-span-1">No. HP</strong><span class="col-span-2">: ${record.nomer_hp || '-'}</span>
+                    <strong class="col-span-1">Lokasi</strong><span class="col-span-2">: ${record.lokasi || '-'}</span>
                 </div>
             `;
-
-            // Cek ketersediaan PDF
-            const pdfSection = document.getElementById('pdfSection');
-            const alertSection = document.getElementById('alertSection');
             
-            pdfSection.innerHTML = '';
-            alertSection.innerHTML = '';
-
-            if (availablePDFs.includes(results[0].idpel)) {
-                pdfSection.innerHTML = `
-                    <div class="pdf-viewer">
-                        <div class="pdf-icon">📄</div>
-                        <strong>File PDF Ditemukan</strong>
-                        <p>IDPEL: ${results[0].idpel}</p>
-                        <p style="font-size: 12px; color: #666; margin-top: 10px;">
-                            (Dalam implementasi penuh, PDF akan ditampilkan di sini)
-                        </p>
+            // Search and display "PDF" result
+            const pdfText = pdfTextIndex[record.idpel];
+            if (pdfText) {
+                pdfResultContent.innerHTML = `
+                    <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-3 rounded">
+                        <p class="font-bold">File PDF Ditemukan!</p>
+                        <div class="mt-2 p-2 bg-white rounded border text-xs">
+                            <p class="font-semibold mb-1">Hasil Ekstraksi Teks:</p>
+                            <pre class="whitespace-pre-wrap">${pdfText}</pre>
+                        </div>
                     </div>
                 `;
             } else {
-                alertSection.innerHTML = `
-                    <div class="alert alert-warning">
-                        <strong>⚠️ Peringatan</strong><br>
-                        File PDF tidak ditemukan untuk IDPEL: ${results[0].idpel}
+                 pdfResultContent.innerHTML = `
+                    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-3 rounded">
+                        <p class="font-bold">File PDF tidak ditemukan.</p>
+                        <p class="text-xs">Pastikan data sudah di-indexing terlebih dahulu.</p>
                     </div>
-                `;
+                 `;
             }
         }
 
-        function resetSearch() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('searchSection').classList.remove('hidden');
-            document.getElementById('resultsSection').classList.add('hidden');
-            document.getElementById('formSection').classList.add('hidden');
-            currentSearchResult = null;
+        // Function to reset to the search view
+        function resetToSearchView() {
+            resultsView.classList.add('hidden');
+            searchView.classList.remove('hidden');
+            refreshButton.classList.remove('hidden'); // Show refresh button
+            searchInput.value = '';
+            currentRecord = null;
+            updateFormContainer.classList.add('hidden');
+            kirimButton.classList.remove('hidden');
+            // Reset update form content
+            keteranganInput.value = '';
+            nomerHpInput.value = '';
+            lokasiInput.value = '';
         }
-
-        function showForm() {
-            document.getElementById('resultsSection').classList.add('hidden');
-            document.getElementById('formSection').classList.remove('hidden');
-
-            // Pre-fill data jika sudah ada
-            if (currentSearchResult) {
-                document.getElementById('keterangan').value = currentSearchResult.keterangan || '';
-                document.getElementById('nomorHP').value = currentSearchResult.nomorHP || '';
-                document.getElementById('lokasi').value = currentSearchResult.lokasi || '';
-            }
+        
+        // Show update form
+        function showUpdateForm() {
+            if (!currentRecord) return;
+            // Fill form with existing data
+            keteranganInput.value = currentRecord.keterangan || '';
+            nomerHpInput.value = currentRecord.nomer_hp || '';
+            lokasiInput.value = currentRecord.lokasi || '';
+            
+            updateFormContainer.classList.remove('hidden');
+            kirimButton.classList.add('hidden');
         }
-
-        function backToResults() {
-            document.getElementById('formSection').classList.add('hidden');
-            document.getElementById('resultsSection').classList.remove('hidden');
-        }
-
-        function updateData() {
-            const keterangan = document.getElementById('keterangan').value.trim();
-            const nomorHP = document.getElementById('nomorHP').value.trim();
-
-            if (!keterangan || !nomorHP) {
-                showPopup('error', 'Mohon lengkapi semua data!');
+        
+        // Get geographic location
+        function handleGetLocation() {
+            if (!navigator.geolocation) {
+                showToast('Browser Anda tidak mendukung Geolocation!', 'error');
                 return;
             }
 
-            // Validasi nomor HP
-            if (!/^(08|62)\d{8,12}$/.test(nomorHP)) {
-                showPopup('error', 'Format nomor HP tidak valid!');
+            function success(position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                lokasiInput.value = `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
+                showToast('Lokasi berhasil didapatkan!');
+            }
+
+            function error() {
+                showToast('Gagal mendapatkan lokasi. Pastikan izin lokasi diberikan.', 'error');
+            }
+            
+            navigator.geolocation.getCurrentPosition(success, error);
+        }
+
+        // Save updated data (simulation)
+        function handleUpdate() {
+            if (!currentRecord) return;
+
+            loadingText.textContent = 'Menyimpan data...';
+            loadingOverlay.classList.remove('hidden');
+            loadingOverlay.classList.add('flex');
+            
+            // Find data index in mock database
+            const recordIndex = mockDatabase.findIndex(data => data.idpel === currentRecord.idpel);
+            
+            if (recordIndex === -1) {
+                showToast('Terjadi kesalahan, data tidak ditemukan!', 'error');
+                loadingOverlay.classList.add('hidden');
+                loadingOverlay.classList.remove('flex');
                 return;
             }
 
-            // Dapatkan lokasi
-            if (navigator.geolocation) {
-                document.getElementById('locationInfo').textContent = 'Mendapatkan lokasi...';
-                
-                navigator.geolocation.getCurrentPosition(
-                    function(position) {
-                        const lat = position.coords.latitude;
-                        const lon = position.coords.longitude;
-                        const lokasi = `${lat}, ${lon}`;
-                        
-                        document.getElementById('lokasi').value = lokasi;
-                        
-                        // Update data
-                        saveData(keterangan, nomorHP, lokasi);
-                    },
-                    function(error) {
-                        document.getElementById('locationInfo').textContent = 'Tidak dapat mendapatkan lokasi. Menggunakan lokasi default.';
-                        const lokasi = 'Lokasi tidak tersedia';
-                        document.getElementById('lokasi').value = lokasi;
-                        saveData(keterangan, nomorHP, lokasi);
-                    }
-                );
-            } else {
-                const lokasi = 'Geolocation tidak didukung';
-                document.getElementById('lokasi').value = lokasi;
-                saveData(keterangan, nomorHP, lokasi);
-            }
-        }
+            // Update data in mock database
+            mockDatabase[recordIndex].keterangan = keteranganInput.value;
+            mockDatabase[recordIndex].nomer_hp = nomerHpInput.value;
+            mockDatabase[recordIndex].lokasi = lokasiInput.value;
 
-        function saveData(keterangan, nomorHP, lokasi) {
-            // Update data di array (simulasi penyimpanan)
-            if (currentSearchResult) {
-                const index = demoData.findIndex(item => item.idpel === currentSearchResult.idpel);
-                if (index !== -1) {
-                    demoData[index].keterangan = keterangan;
-                    demoData[index].nomorHP = nomorHP;
-                    demoData[index].lokasi = lokasi;
-                    
-                    // Simulasi penyimpanan ke CSV tanpa download
-                    const csvData = convertToCSV(demoData);
-                    console.log('Data disimpan ke memori (simulasi CSV):');
-                    console.log(csvData);
-                    console.log('Data yang diupdate: IDPEL', currentSearchResult.idpel);
-                    
-                    showPopup('success', 'Data berhasil disimpan!');
-                    
-                    setTimeout(() => {
-                        resetSearch();
-                    }, 2000);
-                } else {
-                    showPopup('error', 'Gagal menyimpan data!');
-                }
-            }
-        }
-
-        function convertToCSV(data) {
-            const headers = ['IDPEL', 'Nama', 'Alamat', 'Tarif', 'Keterangan', 'Nomor HP', 'Lokasi'];
-            const rows = data.map(item => [
-                item.idpel,
-                item.nama,
-                item.alamat,
-                item.tarif,
-                item.keterangan,
-                item.nomorHP,
-                item.lokasi
-            ]);
-            
-            const csvContent = [
-                headers.join(','),
-                ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
-            ].join('\n');
-            
-            return csvContent;
-        }
-
-        function showPopup(type, message) {
-            const popup = document.getElementById('popup');
-            const overlay = document.getElementById('overlay');
-            const icon = document.getElementById('popupIcon');
-            const msg = document.getElementById('popupMessage');
-
-            if (type === 'success') {
-                icon.innerHTML = '<div class="popup-success">✓</div>';
-                msg.innerHTML = `<strong style="color: #4caf50;">Berhasil!</strong><br>${message}`;
-            } else {
-                icon.innerHTML = '<div class="popup-error">✕</div>';
-                msg.innerHTML = `<strong style="color: #f44336;">Gagal!</strong><br>${message}`;
-            }
-
-            overlay.classList.add('show');
-            popup.classList.add('show');
-
+            // Simulate save process
             setTimeout(() => {
-                overlay.classList.remove('show');
-                popup.classList.remove('show');
-            }, 2500);
+                loadingOverlay.classList.add('hidden');
+                loadingOverlay.classList.remove('flex');
+                showToast('Data berhasil diupdate!');
+                
+                // Refresh result display
+                displayResults(mockDatabase[recordIndex]);
+                
+                // Hide form and show send button again
+                updateFormContainer.classList.add('hidden');
+                kirimButton.classList.remove('hidden');
+                
+                console.log("Database after update:", mockDatabase);
+            }, 1500);
         }
 
-        // Enter key untuk search
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                searchData();
+        // --- EVENT LISTENERS ---
+        refreshButton.addEventListener('click', handleIndexing);
+        searchButton.addEventListener('click', handleSearch);
+        kirimButton.addEventListener('click', showUpdateForm);
+        getLocationButton.addEventListener('click', handleGetLocation);
+        updateButton.addEventListener('click', handleUpdate);
+        searchAgainButton.addEventListener('click', resetToSearchView);
+        
+        // Trigger search with Enter key
+        searchInput.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                handleSearch();
             }
         });
+
+        // Auto-index when page loads for the first time
+        window.onload = () => {
+           handleIndexing();
+        };
+
     </script>
 </body>
-    </html>
+</html>
