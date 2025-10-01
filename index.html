@@ -420,47 +420,61 @@
             updateRefreshButtonVisibility();
         }
 
-        // Load CSV data
-        async function loadCSVData() {
-            csvData = [];
-            try {
-                const files = await window.fs.readdir('data');
-                const csvFiles = files.filter(f => f.toLowerCase().endsWith('.csv'));
-                
-                if (csvFiles.length === 0) {
-                    showAlert('Tidak ada file CSV di folder data', 'error');
-                    return;
-                }
+        // Load CSV data dari folder "data" dan "csv"
+async function loadCSVData() {
+    csvData = [];
+    const folders = ['data', 'csv'];
+    let totalFiles = 0;
+    let totalRows = 0;
 
-                // Load all CSV files
-                for (const file of csvFiles) {
-                    try {
-                        const fileContent = await window.fs.readFile(`data/${file}`, { encoding: 'utf8' });
-                        
-                        await new Promise((resolve) => {
-                            Papa.parse(fileContent, {
-                                header: true,
-                                complete: (results) => {
-                                    const validData = results.data.filter(row => Object.values(row).some(val => val));
-                                    validData.forEach(row => {
-                                        row._sourceFile = file; // Track source file
-                                    });
-                                    csvData.push(...validData);
-                                    resolve();
-                                }
-                            });
+    for (const folder of folders) {
+        try {
+            const files = await window.fs.readdir(folder);
+            const csvFiles = files.filter(f => f.toLowerCase().endsWith('.csv'));
+
+            totalFiles += csvFiles.length;
+
+            if (csvFiles.length === 0) continue;
+
+            // Load all CSV files
+            for (const file of csvFiles) {
+                try {
+                    const fileContent = await window.fs.readFile(`${folder}/${file}`, { encoding: 'utf8' });
+
+                    await new Promise((resolve) => {
+                        Papa.parse(fileContent, {
+                            header: true,
+                            complete: (results) => {
+                                const validData = results.data.filter(row => Object.values(row).some(val => val));
+                                validData.forEach(row => {
+                                    row._sourceFile = file; // Track source file
+                                    row._sourceFolder = folder; // Track source folder
+                                });
+                                csvData.push(...validData);
+                                totalRows += validData.length;
+                                resolve();
+                            }
                         });
-                    } catch (error) {
-                        console.error(`Error loading ${file}:`, error);
-                    }
+                    });
+                } catch (error) {
+                    console.error(`Error loading ${file}:`, error);
                 }
-                
-                console.log('Total CSV loaded:', csvData.length, 'rows from', csvFiles.length, 'files');
-            } catch (error) {
-                console.error('Error loading CSV:', error);
-                showAlert('Error membaca file CSV. Pastikan folder data ada dan berisi file CSV.', 'error');
+            }
+        } catch (error) {
+            // Jika folder tidak ada, skip saja
+            if (error && error.code !== 'ENOENT') {
+                console.error(`Error loading CSV from ${folder}:`, error);
             }
         }
+    }
+
+    if (totalFiles === 0) {
+        showAlert('Tidak ada file CSV di folder data atau folder csv', 'error');
+        return;
+    }
+
+    console.log('Total CSV loaded:', csvData.length, 'rows from', totalFiles, 'files');
+}
 
         // Index PDF files
         async function indexPDFs() {
