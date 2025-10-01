@@ -351,24 +351,27 @@
 
     // ========== DATA INDEXING ==========
     async function indexData() {
-      // Index data folder (assume 1 file: data.csv)
-      DATA_INDEX = [];
-      PDF_INDEX = [];
-      try {
-        let resp = await fetch(DATA_DIR + 'data.csv');
-        let text = await resp.text();
-        DATA_INDEX = parseCSV(text);
-      } catch(e) {
-        alert('Gagal membaca data.csv di folder data.');
-      }
-      // Index PDF folder (list PDFs by trying incremental id, or require a pdf_index.json)
-      // Approach: try PDF filenames based on IDPEL in data
-      if(DATA_INDEX.length) {
-        PDF_INDEX = DATA_INDEX.map(row=>row.IDPEL).filter(Boolean);
-      }
-      // Optionally, clear PDF_TEXT_CACHE
-      PDF_TEXT_CACHE = {};
+  DATA_INDEX = [];
+  PDF_INDEX = [];
+  try {
+    // Ambil daftar file CSV dari index.json
+    let indexResp = await fetch(DATA_DIR + 'index.json');
+    let fileList = await indexResp.json(); // array of filenames
+
+    for (let fname of fileList) {
+      let resp = await fetch(DATA_DIR + fname);
+      let text = await resp.text();
+      let rows = parseCSV(text);
+      DATA_INDEX = DATA_INDEX.concat(rows);
     }
+  } catch (e) {
+    alert('Gagal membaca file data di folder data.');
+  }
+  if (DATA_INDEX.length) {
+    PDF_INDEX = DATA_INDEX.map(row => row.IDPEL).filter(Boolean);
+  }
+  PDF_TEXT_CACHE = {};
+}
     refreshBtn.onclick = () => {
       indexData();
       alert('Indexing selesai!');
