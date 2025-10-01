@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>VKRN ULP WONOSOBO</title>
+  <!-- Google Fonts for better UI -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0072ce;
+      --primary-light: #e6f0fa;
+      --white: #fff;
+      --black: #111;
+      --gold: #e7b200;
+      --shadow: 0 2px 12px rgba(0,0,0,0.05);
+      --border: 2px solid var(--black);
+    }
+    body {
+      background: var(--white);
+      font-family: 'Roboto', Arial, sans-serif;
+      margin: 0;
+      color: var(--black);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      text-align: center;
+      padding: 24px 8px 12px 8px;
+      background: var(--primary-light);
+      border-bottom: var(--border);
+      border-image: linear-gradient(to right, var(--black), var(--gold), var(--black)) 1;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    h1 {
+      margin: 0;
+      font-size: 1.7rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--primary);
+      text-shadow: 0 1px 0 #fff;
+    }
+    .container {
+      flex: 1;
+      padding: 16px 6px 64px 6px;
+      max-width: 480px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .search-box {
+      background: var(--white);
+      padding: 18px 12px 12px 12px;
+      border: var(--border);
+      border-radius: 12px;
+      border-image: linear-gradient(to right, var(--black), var(--gold), var(--black)) 1;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: all 0.3s;
+    }
+    .search-box input[type="text"] {
+      padding: 12px 10px;
+      border: var(--border);
+      border-radius: 6px;
+      font-size: 1.1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-box input[type="text"]:focus {
+      border-color: var(--primary);
+    }
+    .btn {
+      padding: 12px 0;
+      border: none;
+      background: linear-gradient(90deg, var(--primary) 60%, var(--gold) 100%);
+      color: var(--white);
+      font-size: 1.1rem;
+      border-radius: 7px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 6px;
+      box-shadow: var(--shadow);
+      border-bottom: 4px solid var(--black);
+      letter-spacing: 1px;
+      transition: background 0.2s;
+    }
+    .btn:active {
+      background: linear-gradient(90deg, var(--gold) 60%, var(--primary) 100%);
+    }
+    .floating-refresh {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 54px;
+      height: 54px;
+      background: var(--white);
+      border: var(--border);
+      border-radius: 50%;
+      border-image: linear-gradient(to top, var(--black), var(--gold), var(--black)) 1;
+      box-shadow: 0 2px 14px 2px rgba(0,0,0,0.12);
+      cursor: pointer;
+      font-size: 1.9rem;
+      color: var(--primary);
+      transition: background 0.2s, box-shadow 0.2s;
+      display: none;
+    }
+    .floating-refresh.visible {
+      display: flex;
+    }
+    .results-table {
+      width: 100%;
+      margin: 0 auto 18px;
+      background: var(--white);
+      border-radius: 10px;
+      border: var(--border);
+      border-image: linear-gradient(to right, var(--black), var(--gold), var(--black)) 1;
+      box-shadow: var(--shadow);
+      padding: 10px 10px 10px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 1rem;
+      word-break: break-all;
+    }
+    .results-table .row {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--gold);
+    }
+    .results-table .row:last-child {
+      border-bottom: none;
+    }
+    .results-table .label {
+      color: var(--primary);
+      font-weight: bold;
+      font-size: 1.0em;
+    }
+    .results-table .value {
+      color: var(--black);
+      font-size: 1.05em;
+    }
+    .pdf-viewer {
+      margin: 10px 0 20px 0;
+      display: flex;
+      justify-content: center;
+      min-height: 180px;
+      border: var(--border);
+      border-image: linear-gradient(to right, var(--black), var(--gold), var(--black)) 1;
+      border-radius: 10px;
+      background: #fafbff;
+      overflow: auto;
+    }
+    .notfound {
+      color: red;
+      font-weight: bold;
+      text-align: center;
+      margin: 18px 0;
+      font-size: 1.1rem;
+    }
+    .action-btns {
+      margin: 14px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      align-items: center;
+    }
+    .send-form {
+      background: var(--white);
+      border: var(--border);
+      border-image: linear-gradient(to right, var(--black), var(--gold), var(--black)) 1;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .send-form label {
+      font-weight: bold;
+      color: var(--primary);
+      margin-bottom: 3px;
+      font-size: 1em;
+    }
+    .send-form input, .send-form textarea {
+      padding: 9px;
+      border: var(--border);
+      border-radius: 5px;
+      font-size: 1em;
+      margin-bottom: 2px;
+      font-family: inherit;
+      outline: none;
+    }
+    .send-form input[type="tel"] {
+      letter-spacing: 1px;
+    }
+    .send-form .loc-ask {
+      color: var(--primary);
+      font-size: 0.98em;
+      margin-bottom: 5px;
+    }
+    .footer {
+      background: var(--primary-light);
+      text-align: center;
+      font-size: 1em;
+      color: var(--primary);
+      padding: 16px 0 14px 0;
+      border-top: var(--border);
+      border-image: linear-gradient(to right, var(--black), var(--gold), var(--black)) 1;
+      letter-spacing: 2px;
+      font-weight: 700;
+      box-shadow: var(--shadow);
+      margin-top: auto;
+      width: 100%;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 9px 2px 90px 2px;
+      }
+      .search-box,
+      .results-table, 
+      .send-form {
+        padding: 9px 2vw 9px 2vw;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>VKRN ULP WONOSOBO</h1>
+  </header>
+  <div class="container">
+    <form id="searchForm" class="search-box">
+      <input type="text" id="searchInput" placeholder="Masukkan IDPEL/Nama/alamat...">
+      <button type="submit" class="btn" id="searchBtn">Cari</button>
+    </form>
+    <div class="results" style="display:none;">
+      <div class="results-table" id="resultsTable"></div>
+      <div id="pdfContainer"></div>
+      <div class="notfound" id="pdfNotFound" style="display:none;"></div>
+      <div class="action-btns">
+        <button class="btn" id="sendBtn">Kirim</button>
+        <button class="btn" id="againBtn" style="display:none;">Cari Lagi</button>
+      </div>
+      <form id="sendForm" class="send-form" style="display:none;">
+        <label for="keterangan">Keterangan:</label>
+        <textarea id="keterangan" rows="2" required></textarea>
+        <label for="nohp">No. HP Pelanggan:</label>
+        <input type="tel" id="nohp" required pattern="08[0-9]{8,}">
+        <div class="loc-ask" id="locAsk"></div>
+        <input type="hidden" id="lokasi">
+        <button type="button" class="btn" id="updateBtn">Update</button>
+      </form>
+    </div>
+  </div>
+  <div class="floating-refresh" id="refreshBtn" title="Refresh/Indexing Data">&#x21bb;</div>
+  <footer class="footer">@TELWBO 2025</footer>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    // ========== CONFIG ==========
+    const DATA_DIR = 'data/';
+    const PDF_DIR  = 'pdf/';
+    const DATA_EXT = '.csv';
+    // ============================
+
+    // ========== STATE ==========
+    let DATA_INDEX = [];
+    let PDF_INDEX = [];
+    let SEARCH_RESULT = null; // One record
+    let SEARCH_IDPEL = '';
+    let PDF_TEXT_CACHE = {};
+    // ===========================
+
+    // ========== ELEMENTS ==========
+    const searchForm = document.getElementById('searchForm');
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const resultsDiv = document.querySelector('.results');
+    const resultsTable = document.getElementById('resultsTable');
+    const pdfContainer = document.getElementById('pdfContainer');
+    const pdfNotFound = document.getElementById('pdfNotFound');
+    const sendBtn = document.getElementById('sendBtn');
+    const againBtn = document.getElementById('againBtn');
+    const sendForm = document.getElementById('sendForm');
+    const updateBtn = document.getElementById('updateBtn');
+    const keterangan = document.getElementById('keterangan');
+    const nohp = document.getElementById('nohp');
+    const lokasi = document.getElementById('lokasi');
+    const locAsk = document.getElementById('locAsk');
+    const refreshBtn = document.getElementById('refreshBtn');
+    // =============================
+
+    // ========== INITIALIZATION ==========
+    function showRefreshBtn(show) {
+      refreshBtn.classList.toggle('visible', show);
+    }
+    function showSearchForm(show) {
+      searchForm.style.display = show ? 'flex' : 'none';
+      showRefreshBtn(show);
+    }
+    function showResults(show) {
+      resultsDiv.style.display = show ? 'block' : 'none';
+    }
+    function resetSendForm() {
+      sendForm.reset();
+      lokasi.value = '';
+      keterangan.value = '';
+      nohp.value = '';
+      locAsk.textContent = '';
+    }
+    function showSendForm(show) {
+      sendForm.style.display = show ? 'flex' : 'none';
+      if(show) getLokasi();
+    }
+    function showAgainBtn(show) {
+      againBtn.style.display = show ? 'block' : 'none';
+    }
+
+    function resetToInitial() {
+      showSearchForm(true);
+      showResults(false);
+      showAgainBtn(false);
+      showSendForm(false);
+      resultsTable.innerHTML = '';
+      pdfContainer.innerHTML = '';
+      pdfNotFound.style.display = 'none';
+      resetSendForm();
+      SEARCH_RESULT = null;
+      SEARCH_IDPEL = '';
+      searchInput.value = '';
+      searchBtn.textContent = 'Cari';
+    }
+    window.onload = function() {
+      resetToInitial();
+      indexData();
+    };
+    // ========== END INITIALIZATION ==========
+
+    // ========== DATA INDEXING ==========
+    async function indexData() {
+      // Index data folder (assume 1 file: data.csv)
+      DATA_INDEX = [];
+      PDF_INDEX = [];
+      try {
+        let resp = await fetch(DATA_DIR + 'data.csv');
+        let text = await resp.text();
+        DATA_INDEX = parseCSV(text);
+      } catch(e) {
+        alert('Gagal membaca data.csv di folder data.');
+      }
+      // Index PDF folder (list PDFs by trying incremental id, or require a pdf_index.json)
+      // Approach: try PDF filenames based on IDPEL in data
+      if(DATA_INDEX.length) {
+        PDF_INDEX = DATA_INDEX.map(row=>row.IDPEL).filter(Boolean);
+      }
+      // Optionally, clear PDF_TEXT_CACHE
+      PDF_TEXT_CACHE = {};
+    }
+    refreshBtn.onclick = () => {
+      indexData();
+      alert('Indexing selesai!');
+    };
+    // ========== END DATA INDEXING ==========
+
+    // ========== SEARCH HANDLER ==========
+    searchForm.onsubmit = async (e) => {
+      e.preventDefault();
+      let q = searchInput.value.trim().toLowerCase();
+      if(!q) {
+        searchInput.focus(); return;
+      }
+      let found = null;
+      for(let row of DATA_INDEX) {
+        let s = Object.values(row).join(' ').toLowerCase();
+        if(s.includes(q)) {
+          found = row;
+          break;
+        }
+      }
+      if(found) {
+        SEARCH_RESULT = found;
+        SEARCH_IDPEL = found.IDPEL || '';
+        showSearchForm(false);
+        showResults(true);
+        showAgainBtn(true);
+        searchBtn.textContent = 'Cari Lagi';
+        renderResultTable(found);
+        await showPDF(SEARCH_IDPEL);
+      } else {
+        alert('Data tidak ditemukan.');
+      }
+    };
+    againBtn.onclick = () => {
+      resetToInitial();
+    };
+    // ========== END SEARCH HANDLER ==========
+
+    // ========== TABLE RENDER ==========
+    function renderResultTable(data) {
+      resultsTable.innerHTML = '';
+      Object.keys(data).forEach(key=>{
+        let row = document.createElement('div');
+        row.className = 'row';
+        let label = document.createElement('span');
+        label.className = 'label';
+        label.textContent = key;
+        let value = document.createElement('span');
+        value.className = 'value';
+        value.textContent = data[key];
+        row.appendChild(label);
+        row.appendChild(value);
+        resultsTable.appendChild(row);
+      });
+    }
+    // ========== END TABLE RENDER ==========
+
+    // ========== PDF VIEWER AND INDEXING ==========
+    async function showPDF(idpel) {
+      pdfContainer.innerHTML = '';
+      pdfNotFound.style.display = 'none';
+      let pdfFile = `${PDF_DIR}${idpel}.pdf`;
+      try {
+        let resp = await fetch(pdfFile, {method:'HEAD'});
+        if(resp.ok) {
+          // Show PDF using PDF.js
+          let pdfDiv = document.createElement('div');
+          pdfDiv.className = 'pdf-viewer';
+          pdfDiv.innerHTML = `<iframe src="https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodeURIComponent(pdfFile)}" style="width:100%;min-height:200px;border:none;" frameborder="0"></iframe>`;
+          pdfContainer.appendChild(pdfDiv);
+
+          // --- Indexing: convert PDF to text for demo (using PDF.js) ---
+          if(!PDF_TEXT_CACHE[idpel]) {
+            let pdfData = await fetch(pdfFile).then(r=>r.arrayBuffer());
+            let pdf = await pdfjsLib.getDocument({data:pdfData}).promise;
+            let text = '';
+            for(let i=1; i<=pdf.numPages && i<=3; i++) {
+              let page = await pdf.getPage(i);
+              let content = await page.getTextContent();
+              text += content.items.map(it=>it.str).join(' ')+' ';
+            }
+            PDF_TEXT_CACHE[idpel] = text.trim();
+          }
+        } else {
+          pdfNotFound.textContent = 'File PDF tidak ditemukan untuk IDPEL ini.';
+          pdfNotFound.style.display = 'block';
+        }
+      } catch(e) {
+        pdfNotFound.textContent = 'File PDF tidak dapat dibaca.';
+        pdfNotFound.style.display = 'block';
+      }
+    }
+    // ========== END PDF VIEWER ==========
+
+    // ========== SEND FORM LOGICS ==========
+    sendBtn.onclick = () => {
+      showSendForm(true);
+      sendBtn.style.display = 'none';
+      againBtn.style.display = 'none';
+    };
+    updateBtn.onclick = async () => {
+      // Validate
+      if(!keterangan.value.trim() || !nohp.value.match(/^08[0-9]{8,}$/) || !lokasi.value) {
+        alert('Isi semua kolom dengan benar dan ijinkan akses lokasi!');
+        return;
+      }
+      // Save to CSV: update DATA_INDEX row, add/update columns if needed
+      // (Simulasi: update in-memory, dan download file csv baru)
+      let idpel = SEARCH_RESULT.IDPEL;
+      let idx = DATA_INDEX.findIndex(r=>r.IDPEL==idpel);
+      if(idx>=0) {
+        DATA_INDEX[idx].keterangan = keterangan.value.trim();
+        DATA_INDEX[idx].nohp = nohp.value.trim();
+        DATA_INDEX[idx].lokasi = lokasi.value;
+        // Download new CSV as a hack to "save"
+        let csvStr = toCSV(DATA_INDEX);
+        let blob = new Blob([csvStr],{type:'text/csv'});
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = 'data.csv';
+        a.click();
+        URL.revokeObjectURL(url);
+        alert('Data berhasil diupdate!');
+        showSendForm(false);
+        sendBtn.style.display = 'block';
+        againBtn.style.display = 'block';
+      } else {
+        alert('Gagal update data!');
+      }
+    };
+    // ========== END SEND FORM LOGICS ==========
+
+    // ========== LOKASI ==========
+    function getLokasi() {
+      locAsk.textContent = '';
+      lokasi.value = '';
+      if(navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(pos){
+          lokasi.value = `${pos.coords.latitude},${pos.coords.longitude}`;
+        }, function(err){
+          locAsk.textContent = 'Ijinkan akses lokasi perangkat untuk mengisi lokasi!';
+        });
+      } else {
+        locAsk.textContent = 'Perangkat tidak mendukung akses lokasi.';
+      }
+    }
+    // ========== END LOKASI ==========
+
+    // ========== CSV UTILS ==========
+    function parseCSV(str) {
+      // Simple CSV parser, first row as headers
+      let rows = str.trim().split(/\r?\n/).filter(Boolean);
+      let heads = rows[0].split(',');
+      return rows.slice(1).map(row=>{
+        let vals = row.split(',');
+        let obj = {};
+        heads.forEach((h,j)=>obj[h]=vals[j]||'');
+        return obj;
+      });
+    }
+    function toCSV(arr) {
+      // All keys
+      let keys = Array.from(arr.reduce((s,o)=>{Object.keys(o).forEach(k=>s.add(k));return s;},new Set()));
+      let lines = [keys.join(',')];
+      arr.forEach(o=>{
+        let line = keys.map(k=>o[k]||'').join(',');
+        lines.push(line);
+      });
+      return lines.join('\n');
+    }
+    // ========== END CSV UTILS ==========
+
+    // ========== UI LOGIC ==========
+    searchInput.oninput = () => showRefreshBtn(true);
+    searchInput.onfocus = () => showRefreshBtn(true);
+    // Hide refresh when search is not visible
+    showRefreshBtn(true);
+    // ========== END UI LOGIC ==========
+
+  </script>
+</body>
+</html>
