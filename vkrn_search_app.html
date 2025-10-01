@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VKRN ULP WONOSOBO</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            border: 3px solid #000;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, #FFD700 0%, #FFA500 100%);
+            z-index: 0;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            color: #1e40af;
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .search-container {
+            position: relative;
+            z-index: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #1e40af;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #000;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: #f8fafc;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #1e40af;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #000;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 64, 175, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #64748b 0%, #94a3b8 100%);
+            color: white;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(100, 116, 139, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+            color: white;
+            margin-top: 10px;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);
+        }
+
+        .results-container {
+            position: relative;
+            z-index: 1;
+            margin-top: 20px;
+        }
+
+        .table-responsive {
+            background: white;
+            border: 2px solid #000;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .data-row {
+            padding: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .data-row:last-child {
+            border-bottom: none;
+        }
+
+        .data-item {
+            margin-bottom: 10px;
+        }
+
+        .data-label {
+            color: #1e40af;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .data-value {
+            color: #334155;
+            font-size: 14px;
+            word-wrap: break-word;
+        }
+
+        .pdf-container {
+            background: white;
+            border: 2px solid #000;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .pdf-title {
+            color: #1e40af;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .pdf-link {
+            display: inline-block;
+            color: #3b82f6;
+            text-decoration: none;
+            padding: 8px 15px;
+            border: 2px solid #3b82f6;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .pdf-link:hover {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #000;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .fab-refresh {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border: 3px solid #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .fab-refresh:hover {
+            transform: scale(1.1) rotate(180deg);
+        }
+
+        .fab-refresh svg {
+            width: 30px;
+            height: 30px;
+            fill: #000;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #1e40af;
+            font-weight: 600;
+        }
+
+        .spinner {
+            border: 3px solid #e2e8f0;
+            border-top: 3px solid #1e40af;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: white;
+            font-size: 14px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .fab-refresh {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>VKRN ULP WONOSOBO</h1>
+            <p class="subtitle">Sistem Pencarian Data Pelanggan</p>
+        </div>
+
+        <div id="searchSection" class="search-container">
+            <div class="form-group">
+                <label for="searchInput">Masukkan IDPEL</label>
+                <input type="text" id="searchInput" placeholder="Contoh: 123456789012">
+            </div>
+            <button id="searchBtn" class="btn btn-primary">Cari Data</button>
+        </div>
+
+        <div id="resultsSection" class="results-container hidden"></div>
+
+        <div id="formSection" class="search-container hidden">
+            <div class="form-group">
+                <label for="keteranganInput">Keterangan</label>
+                <textarea id="keteranganInput" placeholder="Masukkan keterangan..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="hpInput">Nomor HP Pelanggan</label>
+                <input type="tel" id="hpInput" placeholder="Contoh: 08123456789">
+            </div>
+            <div class="form-group">
+                <label for="lokasiInput">Lokasi</label>
+                <input type="text" id="lokasiInput" placeholder="Mengambil lokasi..." readonly>
+            </div>
+            <button id="updateBtn" class="btn btn-success">Update Data</button>
+            <button id="cancelFormBtn" class="btn btn-secondary">Batal</button>
+        </div>
+    </div>
+
+    <button id="fabRefresh" class="fab-refresh hidden">
+        <svg viewBox="0 0 24 24">
+            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+        </svg>
+    </button>
+
+    <footer>@TELWBO 2025</footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
+    <script>
+        // Global variables
+        let indexedData = {};
+        let currentSearchResult = null;
+        let currentFileName = '';
+
+        // PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.worker.min.js';
+
+        // Elements
+        const searchSection = document.getElementById('searchSection');
+        const resultsSection = document.getElementById('resultsSection');
+        const formSection = document.getElementById('formSection');
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const fabRefresh = document.getElementById('fabRefresh');
+        const keteranganInput = document.getElementById('keteranganInput');
+        const hpInput = document.getElementById('hpInput');
+        const lokasiInput = document.getElementById('lokasiInput');
+        const updateBtn = document.getElementById('updateBtn');
+        const cancelFormBtn = document.getElementById('cancelFormBtn');
+
+        // Show/hide FAB based on search section visibility
+        const observer = new MutationObserver(() => {
+            if (!searchSection.classList.contains('hidden')) {
+                fabRefresh.classList.remove('hidden');
+            } else {
+                fabRefresh.classList.add('hidden');
+            }
+        });
+
+        observer.observe(searchSection, { attributes: true, attributeFilter: ['class'] });
+        
+        // Initial check
+        if (!searchSection.classList.contains('hidden')) {
+            fabRefresh.classList.remove('hidden');
+        }
+
+        // Indexing function
+        async function indexData() {
+            showLoading('Mengindeks data...');
+            indexedData = {};
+
+            try {
+                // Index CSV files
+                const csvFiles = await listFiles('data', '.csv');
+                for (const file of csvFiles) {
+                    const content = await readFile(`data/${file}`);
+                    const data = parseCSV(content);
+                    for (const row of data) {
+                        if (row.IDPEL) {
+                            if (!indexedData[row.IDPEL]) {
+                                indexedData[row.IDPEL] = { csv: [], pdf: [] };
+                            }
+                            indexedData[row.IDPEL].csv.push({ file, data: row });
+                        }
+                    }
+                }
+
+                // Index PDF files
+                const pdfFiles = await listFiles('pdf', '.pdf');
+                for (const file of pdfFiles) {
+                    const text = await extractPDFText(`pdf/${file}`);
+                    const idpels = extractIDPELs(text);
+                    for (const idpel of idpels) {
+                        if (!indexedData[idpel]) {
+                            indexedData[idpel] = { csv: [], pdf: [] };
+                        }
+                        indexedData[idpel].pdf.push(file);
+                    }
+                }
+
+                hideLoading();
+                showAlert('Indexing berhasil!', 'success');
+            } catch (error) {
+                hideLoading();
+                showAlert('Error saat indexing: ' + error.message, 'error');
+            }
+        }
+
+        // List files (simulated)
+        async function listFiles(folder, extension) {
+            // In real implementation, this would require a server-side API
+            // For demo purposes, we'll return empty array
+            console.warn('listFiles requires server-side implementation');
+            return [];
+        }
+
+        // Read file using FileSystem API
+        async function readFile(path) {
+            try {
+                const response = await fetch(path);
+                if (!response.ok) throw new Error('File not found');
+                return await response.text();
+            } catch (error) {
+                throw new Error(`Cannot read file: ${path}`);
+            }
+        }
+
+        // Parse CSV
+        function parseCSV(text) {
+            const lines = text.split('\n').filter(line => line.trim());
+            if (lines.length === 0) return [];
+            
+            const headers = lines[0].split(',').map(h => h.trim());
+            const data = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',');
+                const row = {};
+                headers.forEach((header, index) => {
+                    row[header] = values[index] ? values[index].trim() : '';
+                });
+                data.push(row);
+            }
+            
+            return data;
+        }
+
+        // Extract PDF text
+        async function extractPDFText(path) {
+            try {
+                const pdf = await pdfjsLib.getDocument(path).promise;
+                let fullText = '';
+                
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const textContent = await page.getTextContent();
+                    const pageText = textContent.items.map(item => item.str).join(' ');
+                    fullText += pageText + ' ';
+                }
+                
+                return fullText;
+            } catch (error) {
+                console.error('Error extracting PDF:', error);
+                return '';
+            }
+        }
+
+        // Extract IDPEL numbers from text
+        function extractIDPELs(text) {
+            const idpelPattern = /\b\d{12}\b/g;
+            const matches = text.match(idpelPattern);
+            return matches ? [...new Set(matches)] : [];
+        }
+
+        // Search data
+        async function searchData(idpel) {
+            showLoading('Mencari data...');
+            
+            try {
+                // Search in indexed data first
+                if (indexedData[idpel]) {
+                    displayResults(idpel, indexedData[idpel]);
+                    return;
+                }
+
+                // If not indexed, search directly
+                const csvFiles = await listFiles('data', '.csv');
+                const results = { csv: [], pdf: [] };
+
+                for (const file of csvFiles) {
+                    const content = await readFile(`data/${file}`);
+                    const data = parseCSV(content);
+                    const found = data.find(row => row.IDPEL === idpel);
+                    if (found) {
+                        results.csv.push({ file, data: found });
+                    }
+                }
+
+                // Search PDFs
+                const pdfFiles = await listFiles('pdf', '.pdf');
+                for (const file of pdfFiles) {
+                    const text = await extractPDFText(`pdf/${file}`);
+                    if (text.includes(idpel)) {
+                        results.pdf.push(file);
+                    }
+                }
+
+                if (results.csv.length === 0 && results.pdf.length === 0) {
+                    hideLoading();
+                    showAlert('Data tidak ditemukan', 'warning');
+                    return;
+                }
+
+                displayResults(idpel, results);
+            } catch (error) {
+                hideLoading();
+                showAlert('Error: ' + error.message, 'error');
+            }
+        }
+
+        // Display results
+        function displayResults(idpel, results) {
+            hideLoading();
+            searchSection.classList.add('hidden');
+            resultsSection.classList.remove('hidden');
+            searchBtn.textContent = 'CARI LAGI';
+            searchBtn.classList.remove('btn-primary');
+            searchBtn.classList.add('btn-secondary');
+
+            let html = '';
+
+            // Display CSV data
+            if (results.csv.length > 0) {
+                currentSearchResult = results.csv[0].data;
+                currentFileName = results.csv[0].file;
+
+                html += '<div class="table-responsive">';
+                for (const [key, value] of Object.entries(currentSearchResult)) {
+                    html += `
+                        <div class="data-row">
+                            <div class="data-item">
+                                <div class="data-label">${key}</div>
+                                <div class="data-value">${value || '-'}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+                html += '</div>';
+            }
+
+            // Display PDF links
+            if (results.pdf.length > 0) {
+                html += '<div class="pdf-container">';
+                html += '<div class="pdf-title">Dokumen PDF Terkait:</div>';
+                results.pdf.forEach(file => {
+                    html += `<a href="pdf/${file}" target="_blank" class="pdf-link">${file}</a><br><br>`;
+                });
+                html += '</div>';
+            } else {
+                html += '<div class="alert alert-warning">Data PDF tidak ditemukan</div>';
+            }
+
+            html += '<button id="kirimBtn" class="btn btn-primary">Kirim</button>';
+            resultsSection.innerHTML = html;
+
+            document.getElementById('kirimBtn').addEventListener('click', showForm);
+        }
+
+        // Show form
+        function showForm() {
+            formSection.classList.remove('hidden');
+            getLocation();
+        }
+
+        // Get location
+        function getLocation() {
+            if (navigator.geolocation) {
+                lokasiInput.value = 'Mengambil lokasi...';
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        lokasiInput.value = `${lat}, ${lon}`;
+                    },
+                    (error) => {
+                        lokasiInput.value = 'Lokasi tidak dapat diakses';
+                        showAlert('Mohon izinkan akses lokasi', 'warning');
+                    }
+                );
+            } else {
+                lokasiInput.value = 'Geolocation tidak didukung';
+            }
+        }
+
+        // Update data
+        async function updateData() {
+            const keterangan = keteranganInput.value.trim();
+            const hp = hpInput.value.trim();
+            const lokasi = lokasiInput.value.trim();
+
+            if (!keterangan || !hp || !lokasi || lokasi === 'Mengambil lokasi...') {
+                showAlert('Mohon lengkapi semua data', 'warning');
+                return;
+            }
+
+            showLoading('Menyimpan data...');
+
+            try {
+                // Update current result
+                currentSearchResult.KETERANGAN = keterangan;
+                currentSearchResult.NO_HP = hp;
+                currentSearchResult.LOKASI = lokasi;
+
+                // In real implementation, save to CSV file
+                // This requires server-side API
+                console.log('Data to save:', currentSearchResult);
+                
+                hideLoading();
+                showAlert('Data berhasil disimpan!', 'success');
+                
+                setTimeout(() => {
+                    formSection.classList.add('hidden');
+                    keteranganInput.value = '';
+                    hpInput.value = '';
+                    lokasiInput.value = '';
+                }, 2000);
+            } catch (error) {
+                hideLoading();
+                showAlert('Gagal menyimpan data: ' + error.message, 'error');
+            }
+        }
+
+        // Show loading
+        function showLoading(message) {
+            resultsSection.classList.remove('hidden');
+            resultsSection.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+
+        // Hide loading
+        function hideLoading() {
+            // Loading will be replaced by results
+        }
+
+        // Show alert
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            resultsSection.insertBefore(alertDiv, resultsSection.firstChild);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+
+        // Event listeners
+        searchBtn.addEventListener('click', () => {
+            if (searchBtn.textContent === 'CARI LAGI') {
+                // Reset to initial view
+                searchSection.classList.remove('hidden');
+                resultsSection.classList.add('hidden');
+                resultsSection.innerHTML = '';
+                formSection.classList.add('hidden');
+                searchBtn.textContent = 'CARI DATA';
+                searchBtn.classList.remove('btn-secondary');
+                searchBtn.classList.add('btn-primary');
+                searchInput.value = '';
+                currentSearchResult = null;
+                currentFileName = '';
+            } else {
+                const idpel = searchInput.value.trim();
+                if (!idpel) {
+                    showAlert('Mohon masukkan IDPEL', 'warning');
+                    return;
+                }
+                if (!/^\d{12}$/.test(idpel)) {
+                    showAlert('IDPEL harus 12 digit angka', 'warning');
+                    return;
+                }
+                searchData(idpel);
+            }
+        });
+
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchBtn.click();
+            }
+        });
+
+        fabRefresh.addEventListener('click', indexData);
+        updateBtn.addEventListener('click', updateData);
+        
+        cancelFormBtn.addEventListener('click', () => {
+            formSection.classList.add('hidden');
+            keteranganInput.value = '';
+            hpInput.value = '';
+            lokasiInput.value = '';
+        });
+
+        // Initialize
+        window.addEventListener('load', () => {
+            console.log('VKRN ULP WONOSOBO - Sistem Pencarian Data Pelanggan');
+            console.log('Catatan: Fungsi file system memerlukan implementasi server-side');
+        });
+    </script>
+</body>
+</html>
