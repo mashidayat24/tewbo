@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VKRN ULP WONOSOBO</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -16,68 +18,82 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
-            position: relative;
+            padding-bottom: 80px;
         }
 
         .container {
             max-width: 600px;
             margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            padding: 30px 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            position: relative;
-            border: 3px solid #000;
-            overflow: hidden;
-        }
-
-        .container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 2px;
-            height: 100%;
-            background: linear-gradient(to bottom, #FFD700 0%, #FFA500 100%);
-            z-index: 0;
         }
 
         .header {
-            text-align: center;
+            background: white;
+            padding: 25px 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             margin-bottom: 30px;
+            text-align: center;
+            border: 3px solid black;
             position: relative;
-            z-index: 1;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: -6px;
+            right: -6px;
+            bottom: -6px;
+            background: linear-gradient(45deg, gold, #ffd700, gold);
+            border-radius: 18px;
+            z-index: -1;
         }
 
         .header h1 {
             color: #1e40af;
             font-size: 28px;
             font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 10px;
-        }
-
-        .header .subtitle {
-            color: #64748b;
-            font-size: 14px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
 
         .search-container {
-            position: relative;
-            z-index: 1;
             background: white;
-            padding: 20px;
+            padding: 25px;
             border-radius: 15px;
-            border: 2px solid #000;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 3px solid black;
+            position: relative;
+            animation: slideIn 0.5s ease;
         }
 
-        .form-group {
+        .search-container::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: -6px;
+            right: -6px;
+            bottom: -6px;
+            background: linear-gradient(45deg, gold, #ffd700, gold);
+            border-radius: 18px;
+            z-index: -1;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .input-group {
             margin-bottom: 20px;
         }
 
-        label {
+        .input-group label {
             display: block;
             color: #1e40af;
             font-weight: 600;
@@ -85,27 +101,22 @@
             font-size: 14px;
         }
 
-        input[type="text"],
-        input[type="tel"],
-        textarea {
+        .input-group input, .input-group textarea {
             width: 100%;
             padding: 12px 15px;
-            border: 2px solid #000;
-            border-radius: 10px;
+            border: 2px solid #3b82f6;
+            border-radius: 8px;
             font-size: 16px;
-            transition: all 0.3s;
-            background: #f8fafc;
+            transition: all 0.3s ease;
         }
 
-        input:focus,
-        textarea:focus {
+        .input-group input:focus, .input-group textarea:focus {
             outline: none;
             border-color: #1e40af;
-            background: white;
             box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
         }
 
-        textarea {
+        .input-group textarea {
             resize: vertical;
             min-height: 80px;
         }
@@ -113,171 +124,171 @@
         .btn {
             width: 100%;
             padding: 14px;
-            border: 2px solid #000;
-            border-radius: 10px;
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            color: white;
+            border: 2px solid black;
+            border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-            color: white;
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(30, 64, 175, 0.4);
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
         }
 
         .btn-secondary {
-            background: linear-gradient(135deg, #64748b 0%, #94a3b8 100%);
-            color: white;
-            margin-top: 10px;
-        }
-
-        .btn-secondary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(100, 116, 139, 0.4);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
-            color: white;
-            margin-top: 10px;
-        }
-
-        .btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);
+            background: linear-gradient(135deg, #10b981, #059669);
+            margin-top: 15px;
         }
 
         .results-container {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 3px solid black;
             position: relative;
-            z-index: 1;
             margin-top: 20px;
+            animation: slideIn 0.5s ease;
         }
 
-        .table-responsive {
-            background: white;
-            border: 2px solid #000;
-            border-radius: 15px;
-            overflow: hidden;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        .results-container::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: -6px;
+            right: -6px;
+            bottom: -6px;
+            background: linear-gradient(45deg, gold, #ffd700, gold);
+            border-radius: 18px;
+            z-index: -1;
         }
 
-        .data-row {
+        .result-item {
+            background: #f0f9ff;
             padding: 15px;
-            border-bottom: 2px solid #e2e8f0;
-        }
-
-        .data-row:last-child {
-            border-bottom: none;
-        }
-
-        .data-item {
-            margin-bottom: 10px;
-        }
-
-        .data-label {
-            color: #1e40af;
-            font-weight: 600;
-            font-size: 12px;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-
-        .data-value {
-            color: #334155;
-            font-size: 14px;
-            word-wrap: break-word;
-        }
-
-        .pdf-container {
-            background: white;
-            border: 2px solid #000;
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .pdf-title {
-            color: #1e40af;
-            font-weight: 600;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-
-        .pdf-link {
-            display: inline-block;
-            color: #3b82f6;
-            text-decoration: none;
-            padding: 8px 15px;
-            border: 2px solid #3b82f6;
+            margin-bottom: 12px;
             border-radius: 8px;
-            font-size: 14px;
-            transition: all 0.3s;
+            border: 2px solid #3b82f6;
+            animation: fadeIn 0.5s ease;
         }
 
-        .pdf-link:hover {
-            background: #3b82f6;
-            color: white;
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
-        .alert {
-            padding: 15px;
-            border-radius: 10px;
-            border: 2px solid #000;
-            margin-bottom: 20px;
-            font-size: 14px;
+        .result-item strong {
+            color: #1e40af;
+            display: block;
+            margin-bottom: 5px;
         }
 
-        .alert-warning {
-            background: #fef3c7;
-            color: #92400e;
+        .result-item span {
+            color: #334155;
+            word-break: break-word;
         }
 
-        .alert-success {
-            background: #d1fae5;
-            color: #065f46;
+        .pdf-viewer {
+            margin-top: 20px;
+            border: 2px solid black;
+            border-radius: 8px;
+            overflow: hidden;
         }
 
-        .alert-error {
-            background: #fee2e2;
-            color: #991b1b;
+        .pdf-viewer canvas {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
-        .fab-refresh {
+        .refresh-btn {
             position: fixed;
             bottom: 30px;
             right: 30px;
             width: 60px;
             height: 60px;
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            border: 3px solid #000;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border: 3px solid black;
             border-radius: 50%;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s;
             z-index: 1000;
+            animation: pulse 2s infinite;
         }
 
-        .fab-refresh:hover {
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .refresh-btn:hover {
             transform: scale(1.1) rotate(180deg);
         }
 
-        .fab-refresh svg {
-            width: 30px;
-            height: 30px;
-            fill: #000;
+        .refresh-btn:active {
+            transform: scale(0.95);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            padding: 20px;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .alert {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border: 2px solid;
+            animation: slideIn 0.5s ease;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            border-color: #dc2626;
+            color: #991b1b;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
         }
 
         .loading {
@@ -288,8 +299,8 @@
         }
 
         .spinner {
-            border: 3px solid #e2e8f0;
-            border-top: 3px solid #1e40af;
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #3b82f6;
             border-radius: 50%;
             width: 40px;
             height: 40px;
@@ -302,32 +313,26 @@
             100% { transform: rotate(360deg); }
         }
 
-        footer {
-            text-align: center;
-            margin-top: 30px;
-            color: white;
-            font-size: 14px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
         @media (max-width: 480px) {
-            .container {
-                padding: 20px 15px;
+            body {
+                padding: 15px;
+                padding-bottom: 80px;
             }
 
             .header h1 {
                 font-size: 24px;
             }
 
-            .fab-refresh {
-                bottom: 20px;
-                right: 20px;
+            .search-container, .results-container {
+                padding: 20px;
+            }
+
+            .refresh-btn {
                 width: 50px;
                 height: 50px;
+                font-size: 24px;
+                bottom: 20px;
+                right: 20px;
             }
         }
     </style>
@@ -336,364 +341,323 @@
     <div class="container">
         <div class="header">
             <h1>VKRN ULP WONOSOBO</h1>
-            <p class="subtitle">Sistem Pencarian Data Pelanggan</p>
         </div>
 
-        <div id="searchSection" class="search-container">
-            <div class="form-group">
-                <label for="searchInput">Masukkan IDPEL</label>
-                <input type="text" id="searchInput" placeholder="Contoh: 123456789012">
+        <div id="searchContainer" class="search-container">
+            <div class="input-group">
+                <label for="searchInput">Masukkan IDPEL untuk pencarian:</label>
+                <input type="text" id="searchInput" placeholder="Contoh: 123456789">
             </div>
-            <button id="searchBtn" class="btn btn-primary">Cari Data</button>
+            <button class="btn" id="searchBtn">Cari</button>
         </div>
 
-        <div id="resultsSection" class="results-container hidden"></div>
+        <div id="resultsContainer" class="results-container hidden">
+            <div id="resultsContent"></div>
+            <button class="btn btn-secondary" id="sendBtn">Kirim</button>
+        </div>
 
-        <div id="formSection" class="search-container hidden">
-            <div class="form-group">
-                <label for="keteranganInput">Keterangan</label>
-                <textarea id="keteranganInput" placeholder="Masukkan keterangan..."></textarea>
+        <div id="formContainer" class="search-container hidden">
+            <div class="input-group">
+                <label for="keteranganInput">Keterangan:</label>
+                <textarea id="keteranganInput" placeholder="Masukkan keterangan"></textarea>
             </div>
-            <div class="form-group">
-                <label for="hpInput">Nomor HP Pelanggan</label>
+            <div class="input-group">
+                <label for="hpInput">Nomor HP Pelanggan:</label>
                 <input type="tel" id="hpInput" placeholder="Contoh: 08123456789">
             </div>
-            <div class="form-group">
-                <label for="lokasiInput">Lokasi</label>
-                <input type="text" id="lokasiInput" placeholder="Mengambil lokasi..." readonly>
+            <div class="input-group">
+                <label for="lokasiInput">Lokasi:</label>
+                <input type="text" id="lokasiInput" placeholder="Mendapatkan lokasi..." readonly>
             </div>
-            <button id="updateBtn" class="btn btn-success">Update Data</button>
-            <button id="cancelFormBtn" class="btn btn-secondary">Batal</button>
+            <button class="btn" id="updateBtn">Update</button>
+            <button class="btn btn-secondary" id="cancelBtn">Batal</button>
         </div>
+
+        <button class="refresh-btn hidden" id="refreshBtn">⟳</button>
+
+        <div class="footer">@TELWBO 2025</div>
     </div>
 
-    <button id="fabRefresh" class="fab-refresh hidden">
-        <svg viewBox="0 0 24 24">
-            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-        </svg>
-    </button>
-
-    <footer>@TELWBO 2025</footer>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
     <script>
-        // Global variables
-        let indexedData = {};
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        let csvData = [];
+        let pdfIndex = {};
         let currentSearchResult = null;
         let currentFileName = '';
 
-        // PDF.js worker
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.worker.min.js';
+        const elements = {
+            searchContainer: document.getElementById('searchContainer'),
+            searchInput: document.getElementById('searchInput'),
+            searchBtn: document.getElementById('searchBtn'),
+            resultsContainer: document.getElementById('resultsContainer'),
+            resultsContent: document.getElementById('resultsContent'),
+            sendBtn: document.getElementById('sendBtn'),
+            formContainer: document.getElementById('formContainer'),
+            keteranganInput: document.getElementById('keteranganInput'),
+            hpInput: document.getElementById('hpInput'),
+            lokasiInput: document.getElementById('lokasiInput'),
+            updateBtn: document.getElementById('updateBtn'),
+            cancelBtn: document.getElementById('cancelBtn'),
+            refreshBtn: document.getElementById('refreshBtn')
+        };
 
-        // Elements
-        const searchSection = document.getElementById('searchSection');
-        const resultsSection = document.getElementById('resultsSection');
-        const formSection = document.getElementById('formSection');
-        const searchInput = document.getElementById('searchInput');
-        const searchBtn = document.getElementById('searchBtn');
-        const fabRefresh = document.getElementById('fabRefresh');
-        const keteranganInput = document.getElementById('keteranganInput');
-        const hpInput = document.getElementById('hpInput');
-        const lokasiInput = document.getElementById('lokasiInput');
-        const updateBtn = document.getElementById('updateBtn');
-        const cancelFormBtn = document.getElementById('cancelFormBtn');
-
-        // Show/hide FAB based on search section visibility
-        const observer = new MutationObserver(() => {
-            if (!searchSection.classList.contains('hidden')) {
-                fabRefresh.classList.remove('hidden');
+        // Show/hide refresh button based on search container visibility
+        function updateRefreshButtonVisibility() {
+            if (!elements.searchContainer.classList.contains('hidden')) {
+                elements.refreshBtn.classList.remove('hidden');
             } else {
-                fabRefresh.classList.add('hidden');
+                elements.refreshBtn.classList.add('hidden');
             }
-        });
-
-        observer.observe(searchSection, { attributes: true, attributeFilter: ['class'] });
-        
-        // Initial check
-        if (!searchSection.classList.contains('hidden')) {
-            fabRefresh.classList.remove('hidden');
         }
 
-        // Indexing function
-        async function indexData() {
-            showLoading('Mengindeks data...');
-            indexedData = {};
+        // Initialize
+        async function init() {
+            await loadCSVData();
+            getLocation();
+            updateRefreshButtonVisibility();
+        }
 
+        // Load CSV data
+        async function loadCSVData() {
             try {
-                // Index CSV files
-                const csvFiles = await listFiles('data', '.csv');
-                for (const file of csvFiles) {
-                    const content = await readFile(`data/${file}`);
-                    const data = parseCSV(content);
-                    for (const row of data) {
-                        if (row.IDPEL) {
-                            if (!indexedData[row.IDPEL]) {
-                                indexedData[row.IDPEL] = { csv: [], pdf: [] };
-                            }
-                            indexedData[row.IDPEL].csv.push({ file, data: row });
-                        }
-                    }
-                }
-
-                // Index PDF files
-                const pdfFiles = await listFiles('pdf', '.pdf');
-                for (const file of pdfFiles) {
-                    const text = await extractPDFText(`pdf/${file}`);
-                    const idpels = extractIDPELs(text);
-                    for (const idpel of idpels) {
-                        if (!indexedData[idpel]) {
-                            indexedData[idpel] = { csv: [], pdf: [] };
-                        }
-                        indexedData[idpel].pdf.push(file);
-                    }
-                }
-
-                hideLoading();
-                showAlert('Indexing berhasil!', 'success');
-            } catch (error) {
-                hideLoading();
-                showAlert('Error saat indexing: ' + error.message, 'error');
-            }
-        }
-
-        // List files (simulated)
-        async function listFiles(folder, extension) {
-            // In real implementation, this would require a server-side API
-            // For demo purposes, we'll return empty array
-            console.warn('listFiles requires server-side implementation');
-            return [];
-        }
-
-        // Read file using FileSystem API
-        async function readFile(path) {
-            try {
-                const response = await fetch(path);
-                if (!response.ok) throw new Error('File not found');
-                return await response.text();
-            } catch (error) {
-                throw new Error(`Cannot read file: ${path}`);
-            }
-        }
-
-        // Parse CSV
-        function parseCSV(text) {
-            const lines = text.split('\n').filter(line => line.trim());
-            if (lines.length === 0) return [];
-            
-            const headers = lines[0].split(',').map(h => h.trim());
-            const data = [];
-            
-            for (let i = 1; i < lines.length; i++) {
-                const values = lines[i].split(',');
-                const row = {};
-                headers.forEach((header, index) => {
-                    row[header] = values[index] ? values[index].trim() : '';
-                });
-                data.push(row);
-            }
-            
-            return data;
-        }
-
-        // Extract PDF text
-        async function extractPDFText(path) {
-            try {
-                const pdf = await pdfjsLib.getDocument(path).promise;
-                let fullText = '';
+                const files = await window.fs.readdir('data');
+                const csvFiles = files.filter(f => f.endsWith('.csv'));
                 
+                if (csvFiles.length === 0) {
+                    showAlert('Tidak ada file CSV di folder data', 'error');
+                    return;
+                }
+
+                // Load first CSV file
+                currentFileName = csvFiles[0];
+                const fileContent = await window.fs.readFile(`data/${currentFileName}`, { encoding: 'utf8' });
+                
+                Papa.parse(fileContent, {
+                    header: true,
+                    complete: (results) => {
+                        csvData = results.data.filter(row => Object.values(row).some(val => val));
+                        console.log('CSV loaded:', csvData.length, 'rows');
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading CSV:', error);
+                showAlert('Error membaca file CSV. Pastikan folder data ada dan berisi file CSV.', 'error');
+            }
+        }
+
+        // Index PDF files
+        async function indexPDFs() {
+            elements.refreshBtn.innerHTML = '<div class="spinner" style="width: 30px; height: 30px; border-width: 3px; margin: 0;"></div>';
+            pdfIndex = {};
+
+            try {
+                const files = await window.fs.readdir('pdf');
+                const pdfFiles = files.filter(f => f.toLowerCase().endsWith('.pdf'));
+                
+                let processed = 0;
+                for (const file of pdfFiles) {
+                    try {
+                        const pdfData = await window.fs.readFile(`pdf/${file}`);
+                        const text = await extractTextFromPDF(pdfData);
+                        
+                        // Extract IDPEL numbers (assuming 10-12 digit numbers)
+                        const idpelMatches = text.match(/\b\d{10,12}\b/g);
+                        if (idpelMatches) {
+                            idpelMatches.forEach(idpel => {
+                                if (!pdfIndex[idpel]) {
+                                    pdfIndex[idpel] = [];
+                                }
+                                pdfIndex[idpel].push(file);
+                            });
+                        }
+                        processed++;
+                    } catch (error) {
+                        console.error(`Error processing ${file}:`, error);
+                    }
+                }
+                
+                elements.refreshBtn.innerHTML = '⟳';
+                showAlert(`Indexing selesai! ${processed} file PDF diproses.`, 'success');
+                console.log('PDF Index:', pdfIndex);
+            } catch (error) {
+                elements.refreshBtn.innerHTML = '⟳';
+                console.error('Error indexing PDFs:', error);
+                showAlert('Error saat indexing PDF. Pastikan folder pdf ada.', 'error');
+            }
+        }
+
+        // Extract text from PDF
+        async function extractTextFromPDF(pdfData) {
+            try {
+                const loadingTask = pdfjsLib.getDocument({ data: pdfData });
+                const pdf = await loadingTask.promise;
+                let fullText = '';
+
                 for (let i = 1; i <= pdf.numPages; i++) {
                     const page = await pdf.getPage(i);
                     const textContent = await page.getTextContent();
                     const pageText = textContent.items.map(item => item.str).join(' ');
                     fullText += pageText + ' ';
                 }
-                
+
                 return fullText;
             } catch (error) {
-                console.error('Error extracting PDF:', error);
+                console.error('Error extracting PDF text:', error);
                 return '';
             }
         }
 
-        // Extract IDPEL numbers from text
-        function extractIDPELs(text) {
-            const idpelPattern = /\b\d{12}\b/g;
-            const matches = text.match(idpelPattern);
-            return matches ? [...new Set(matches)] : [];
-        }
-
-        // Search data
-        async function searchData(idpel) {
-            showLoading('Mencari data...');
+        // Search function
+        async function searchData() {
+            const searchTerm = elements.searchInput.value.trim();
             
-            try {
-                // Search in indexed data first
-                if (indexedData[idpel]) {
-                    displayResults(idpel, indexedData[idpel]);
-                    return;
-                }
-
-                // If not indexed, search directly
-                const csvFiles = await listFiles('data', '.csv');
-                const results = { csv: [], pdf: [] };
-
-                for (const file of csvFiles) {
-                    const content = await readFile(`data/${file}`);
-                    const data = parseCSV(content);
-                    const found = data.find(row => row.IDPEL === idpel);
-                    if (found) {
-                        results.csv.push({ file, data: found });
-                    }
-                }
-
-                // Search PDFs
-                const pdfFiles = await listFiles('pdf', '.pdf');
-                for (const file of pdfFiles) {
-                    const text = await extractPDFText(`pdf/${file}`);
-                    if (text.includes(idpel)) {
-                        results.pdf.push(file);
-                    }
-                }
-
-                if (results.csv.length === 0 && results.pdf.length === 0) {
-                    hideLoading();
-                    showAlert('Data tidak ditemukan', 'warning');
-                    return;
-                }
-
-                displayResults(idpel, results);
-            } catch (error) {
-                hideLoading();
-                showAlert('Error: ' + error.message, 'error');
-            }
-        }
-
-        // Display results
-        function displayResults(idpel, results) {
-            hideLoading();
-            searchSection.classList.add('hidden');
-            resultsSection.classList.remove('hidden');
-            searchBtn.textContent = 'CARI LAGI';
-            searchBtn.classList.remove('btn-primary');
-            searchBtn.classList.add('btn-secondary');
-
-            let html = '';
-
-            // Display CSV data
-            if (results.csv.length > 0) {
-                currentSearchResult = results.csv[0].data;
-                currentFileName = results.csv[0].file;
-
-                html += '<div class="table-responsive">';
-                for (const [key, value] of Object.entries(currentSearchResult)) {
-                    html += `
-                        <div class="data-row">
-                            <div class="data-item">
-                                <div class="data-label">${key}</div>
-                                <div class="data-value">${value || '-'}</div>
-                            </div>
-                        </div>
-                    `;
-                }
-                html += '</div>';
+            if (!searchTerm) {
+                showAlert('Masukkan IDPEL untuk pencarian', 'error');
+                return;
             }
 
-            // Display PDF links
-            if (results.pdf.length > 0) {
-                html += '<div class="pdf-container">';
-                html += '<div class="pdf-title">Dokumen PDF Terkait:</div>';
-                results.pdf.forEach(file => {
-                    html += `<a href="pdf/${file}" target="_blank" class="pdf-link">${file}</a><br><br>`;
-                });
-                html += '</div>';
+            elements.resultsContent.innerHTML = '<div class="loading"><div class="spinner"></div>Mencari data...</div>';
+            elements.searchContainer.classList.add('hidden');
+            elements.resultsContainer.classList.remove('hidden');
+            elements.searchBtn.textContent = 'Cari Lagi';
+            updateRefreshButtonVisibility();
+
+            // Search in CSV
+            const results = csvData.filter(row => {
+                return Object.values(row).some(val => 
+                    String(val).toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            });
+
+            if (results.length === 0) {
+                elements.resultsContent.innerHTML = '<div class="alert alert-error">Data tidak ditemukan</div>';
+                return;
+            }
+
+            currentSearchResult = results[0];
+            
+            // Display results
+            let html = '<h3 style="color: #1e40af; margin-bottom: 15px;">Hasil Pencarian:</h3>';
+            
+            for (const [key, value] of Object.entries(currentSearchResult)) {
+                if (value) {
+                    html += `<div class="result-item"><strong>${key}:</strong> <span>${value}</span></div>`;
+                }
+            }
+
+            // Search for PDF
+            const idpel = currentSearchResult.IDPEL || currentSearchResult.idpel || searchTerm;
+            if (pdfIndex[idpel] && pdfIndex[idpel].length > 0) {
+                html += '<h3 style="color: #1e40af; margin: 20px 0 15px 0;">Dokumen PDF:</h3>';
+                
+                try {
+                    const pdfFile = pdfIndex[idpel][0];
+                    const pdfData = await window.fs.readFile(`pdf/${pdfFile}`);
+                    html += `<div class="pdf-viewer" id="pdfViewer"></div>`;
+                    elements.resultsContent.innerHTML = html;
+                    
+                    // Render PDF
+                    await renderPDF(pdfData);
+                } catch (error) {
+                    console.error('Error loading PDF:', error);
+                    html += '<div class="alert alert-error">Error memuat file PDF</div>';
+                    elements.resultsContent.innerHTML = html;
+                }
             } else {
-                html += '<div class="alert alert-warning">Data PDF tidak ditemukan</div>';
+                html += '<div class="alert alert-error" style="margin-top: 15px;">Dokumen PDF tidak ditemukan</div>';
+                elements.resultsContent.innerHTML = html;
             }
-
-            html += '<button id="kirimBtn" class="btn btn-primary">Kirim</button>';
-            resultsSection.innerHTML = html;
-
-            document.getElementById('kirimBtn').addEventListener('click', showForm);
         }
 
-        // Show form
-        function showForm() {
-            formSection.classList.remove('hidden');
-            getLocation();
+        // Render PDF
+        async function renderPDF(pdfData) {
+            try {
+                const loadingTask = pdfjsLib.getDocument({ data: pdfData });
+                const pdf = await loadingTask.promise;
+                const page = await pdf.getPage(1);
+                
+                const viewport = page.getViewport({ scale: 1.5 });
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                
+                await page.render({
+                    canvasContext: context,
+                    viewport: viewport
+                }).promise;
+                
+                document.getElementById('pdfViewer').appendChild(canvas);
+            } catch (error) {
+                console.error('Error rendering PDF:', error);
+            }
         }
 
         // Get location
         function getLocation() {
             if (navigator.geolocation) {
-                lokasiInput.value = 'Mengambil lokasi...';
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         const lat = position.coords.latitude;
                         const lon = position.coords.longitude;
-                        lokasiInput.value = `${lat}, ${lon}`;
+                        elements.lokasiInput.value = `${lat}, ${lon}`;
                     },
                     (error) => {
-                        lokasiInput.value = 'Lokasi tidak dapat diakses';
-                        showAlert('Mohon izinkan akses lokasi', 'warning');
+                        elements.lokasiInput.value = 'Lokasi tidak tersedia';
+                        console.error('Error getting location:', error);
                     }
                 );
             } else {
-                lokasiInput.value = 'Geolocation tidak didukung';
+                elements.lokasiInput.value = 'Geolocation tidak didukung';
             }
         }
 
-        // Update data
-        async function updateData() {
-            const keterangan = keteranganInput.value.trim();
-            const hp = hpInput.value.trim();
-            const lokasi = lokasiInput.value.trim();
+        // Save data
+        async function saveData() {
+            if (!currentSearchResult) return;
 
-            if (!keterangan || !hp || !lokasi || lokasi === 'Mengambil lokasi...') {
-                showAlert('Mohon lengkapi semua data', 'warning');
+            const keterangan = elements.keteranganInput.value.trim();
+            const hp = elements.hpInput.value.trim();
+            const lokasi = elements.lokasiInput.value.trim();
+
+            if (!keterangan || !hp || !lokasi || lokasi === 'Lokasi tidak tersedia') {
+                showAlert('Semua field harus diisi dan lokasi harus tersedia', 'error');
                 return;
             }
-
-            showLoading('Menyimpan data...');
 
             try {
                 // Update current result
                 currentSearchResult.KETERANGAN = keterangan;
-                currentSearchResult.NO_HP = hp;
+                currentSearchResult.NOMOR_HP = hp;
                 currentSearchResult.LOKASI = lokasi;
 
-                // In real implementation, save to CSV file
-                // This requires server-side API
-                console.log('Data to save:', currentSearchResult);
+                // Find and update in csvData
+                const index = csvData.findIndex(row => 
+                    JSON.stringify(row) === JSON.stringify(currentSearchResult)
+                );
                 
-                hideLoading();
+                if (index !== -1) {
+                    csvData[index] = currentSearchResult;
+                }
+
+                // Convert back to CSV
+                const csv = Papa.unparse(csvData);
+                await window.fs.writeFile(`data/${currentFileName}`, csv);
+
                 showAlert('Data berhasil disimpan!', 'success');
                 
                 setTimeout(() => {
-                    formSection.classList.add('hidden');
-                    keteranganInput.value = '';
-                    hpInput.value = '';
-                    lokasiInput.value = '';
+                    elements.formContainer.classList.add('hidden');
+                    elements.resultsContainer.classList.remove('hidden');
+                    elements.keteranganInput.value = '';
+                    elements.hpInput.value = '';
                 }, 2000);
             } catch (error) {
-                hideLoading();
-                showAlert('Gagal menyimpan data: ' + error.message, 'error');
+                console.error('Error saving data:', error);
+                showAlert('Gagal menyimpan data', 'error');
             }
-        }
-
-        // Show loading
-        function showLoading(message) {
-            resultsSection.classList.remove('hidden');
-            resultsSection.innerHTML = `
-                <div class="loading">
-                    <div class="spinner"></div>
-                    <p>${message}</p>
-                </div>
-            `;
-        }
-
-        // Hide loading
-        function hideLoading() {
-            // Loading will be replaced by results
         }
 
         // Show alert
@@ -701,62 +665,61 @@
             const alertDiv = document.createElement('div');
             alertDiv.className = `alert alert-${type}`;
             alertDiv.textContent = message;
-            resultsSection.insertBefore(alertDiv, resultsSection.firstChild);
             
-            setTimeout(() => {
-                alertDiv.remove();
-            }, 5000);
+            const container = elements.resultsContainer.classList.contains('hidden') 
+                ? elements.searchContainer 
+                : elements.resultsContainer;
+            
+            container.insertBefore(alertDiv, container.firstChild);
+            
+            setTimeout(() => alertDiv.remove(), 5000);
         }
 
         // Event listeners
-        searchBtn.addEventListener('click', () => {
-            if (searchBtn.textContent === 'CARI LAGI') {
-                // Reset to initial view
-                searchSection.classList.remove('hidden');
-                resultsSection.classList.add('hidden');
-                resultsSection.innerHTML = '';
-                formSection.classList.add('hidden');
-                searchBtn.textContent = 'CARI DATA';
-                searchBtn.classList.remove('btn-secondary');
-                searchBtn.classList.add('btn-primary');
-                searchInput.value = '';
+        elements.searchBtn.addEventListener('click', () => {
+            if (elements.searchBtn.textContent === 'Cari Lagi') {
+                elements.resultsContainer.classList.add('hidden');
+                elements.searchContainer.classList.remove('hidden');
+                elements.searchBtn.textContent = 'Cari';
+                elements.searchInput.value = '';
                 currentSearchResult = null;
-                currentFileName = '';
+                updateRefreshButtonVisibility();
             } else {
-                const idpel = searchInput.value.trim();
-                if (!idpel) {
-                    showAlert('Mohon masukkan IDPEL', 'warning');
-                    return;
-                }
-                if (!/^\d{12}$/.test(idpel)) {
-                    showAlert('IDPEL harus 12 digit angka', 'warning');
-                    return;
-                }
-                searchData(idpel);
+                searchData();
             }
         });
 
-        searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                searchBtn.click();
+        elements.searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && elements.searchBtn.textContent === 'Cari') {
+                searchData();
             }
         });
 
-        fabRefresh.addEventListener('click', indexData);
-        updateBtn.addEventListener('click', updateData);
-        
-        cancelFormBtn.addEventListener('click', () => {
-            formSection.classList.add('hidden');
-            keteranganInput.value = '';
-            hpInput.value = '';
-            lokasiInput.value = '';
+        elements.sendBtn.addEventListener('click', () => {
+            if (!currentSearchResult) return;
+            
+            elements.resultsContainer.classList.add('hidden');
+            elements.formContainer.classList.remove('hidden');
+            
+            // Pre-fill if data exists
+            elements.keteranganInput.value = currentSearchResult.KETERANGAN || '';
+            elements.hpInput.value = currentSearchResult.NOMOR_HP || '';
+            elements.lokasiInput.value = currentSearchResult.LOKASI || elements.lokasiInput.value;
         });
+
+        elements.updateBtn.addEventListener('click', saveData);
+
+        elements.cancelBtn.addEventListener('click', () => {
+            elements.formContainer.classList.add('hidden');
+            elements.resultsContainer.classList.remove('hidden');
+            elements.keteranganInput.value = '';
+            elements.hpInput.value = '';
+        });
+
+        elements.refreshBtn.addEventListener('click', indexPDFs);
 
         // Initialize
-        window.addEventListener('load', () => {
-            console.log('VKRN ULP WONOSOBO - Sistem Pencarian Data Pelanggan');
-            console.log('Catatan: Fungsi file system memerlukan implementasi server-side');
-        });
+        init();
     </script>
 </body>
-</html>
+    </html>
