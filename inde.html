@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pencarian Data Pelanggan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 30px;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+            margin: 5px;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .results-container {
+            height: 85vh;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            background: #f9fafb;
+        }
+
+        .result-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .result-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .result-item strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .result-item div {
+            color: #555;
+            font-size: 14px;
+            margin: 3px 0;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-items: stretch;
+        }
+
+        .button-group .btn {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .pdf-viewer {
+            width: 100%;
+            height: 85vh;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .btn {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn-secondary {
+                width: 100%;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Halaman Utama -->
+        <div id="mainPage" class="card">
+            <div class="header">
+                <h1>🔍 Pencarian Data Pelanggan</h1>
+                <p>Masukkan kata kunci untuk mencari data</p>
+            </div>
+            <div class="search-box">
+                <input type="text" id="searchInput" class="search-input" placeholder="Masukkan IDPEL atau nama pelanggan...">
+            </div>
+            <button class="btn btn-primary" onclick="searchData()">Cari Data</button>
+        </div>
+
+        <!-- Halaman Hasil Pencarian -->
+        <div id="resultsPage" class="card hidden">
+            <div class="header">
+                <h1>📋 Hasil Pencarian</h1>
+            </div>
+            <div id="resultsContainer" class="results-container"></div>
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="showMainPage()">← Kembali</button>
+                <button class="btn btn-secondary" onclick="showProgramPage()">📄 Lihat Program</button>
+                <button class="btn btn-secondary" onclick="showLaporanPage()">📱 Laporan WA</button>
+            </div>
+        </div>
+
+        <!-- Halaman Lihat Program -->
+        <div id="programPage" class="card hidden">
+            <div class="header">
+                <h1>📄 Program PDF</h1>
+            </div>
+            <iframe id="pdfViewer" class="pdf-viewer"></iframe>
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="showResultsPage()">← Kembali</button>
+            </div>
+        </div>
+
+        <!-- Halaman Laporan WA -->
+        <div id="laporanPage" class="card hidden">
+            <div class="header">
+                <h1>📱 Laporan WhatsApp</h1>
+            </div>
+            <div class="form-group">
+                <label>IDPEL:</label>
+                <input type="text" id="idpelInput" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label>Tegangan:</label>
+                <input type="text" id="teganganInput" class="form-control" placeholder="Masukkan tegangan">
+            </div>
+            <div class="form-group">
+                <label>No. WA Pelanggan:</label>
+                <input type="tel" id="waInput" class="form-control" placeholder="08xxxxxxxxxx">
+            </div>
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="showResultsPage()">← Kembali</button>
+                <button class="btn btn-success" onclick="sendWhatsApp()">✓ Kirim WA</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentData = null;
+        let selectedIdpel = null;
+        let currentLocation = null;
+
+        async function searchData() {
+            const keyword = document.getElementById('searchInput').value.trim();
+            if (!keyword) {
+                alert('Mohon masukkan kata kunci pencarian');
+                return;
+            }
+
+            try {
+                // Sembunyikan halaman utama
+                document.getElementById('mainPage').classList.add('hidden');
+                document.getElementById('resultsPage').classList.remove('hidden');
+                
+                const resultsContainer = document.getElementById('resultsContainer');
+                resultsContainer.innerHTML = '<div class="loading">⏳ Mencari data...</div>';
+
+                // Coba membaca file CSV
+                let csvData;
+                try {
+                    csvData = await window.fs.readFile('csv/data.csv', { encoding: 'utf8' });
+                } catch (error) {
+                    // Jika gagal, coba path alternatif
+                    csvData = await window.fs.readFile('data.csv', { encoding: 'utf8' });
+                }
+
+                // Parse CSV
+                const lines = csvData.split('\n').filter(line => line.trim());
+                const headers = lines[0].split(',').map(h => h.trim());
+                
+                const results = [];
+                for (let i = 1; i < lines.length; i++) {
+                    const values = lines[i].split(',').map(v => v.trim());
+                    const row = {};
+                    headers.forEach((header, index) => {
+                        row[header] = values[index] || '';
+                    });
+                    
+                    // Filter berdasarkan keyword
+                    const rowString = Object.values(row).join(' ').toLowerCase();
+                    if (rowString.includes(keyword.toLowerCase())) {
+                        results.push(row);
+                    }
+                }
+
+                currentData = results;
+                displayResults(results);
+            } catch (error) {
+                document.getElementById('resultsContainer').innerHTML = 
+                    '<div class="error">❌ Gagal membaca file CSV. Pastikan file csv/data.csv ada di folder yang benar.</div>';
+                console.error('Error:', error);
+            }
+        }
+
+        function displayResults(results) {
+            const container = document.getElementById('resultsContainer');
+            
+            if (results.length === 0) {
+                container.innerHTML = '<div class="error">❌ Tidak ada data yang ditemukan</div>';
+                return;
+            }
+
+            container.innerHTML = results.map((row, index) => {
+                return `
+                    <div class="result-item" onclick="selectData(${index})">
+                        ${Object.entries(row).map(([key, value]) => 
+                            `<div><strong>${key}:</strong> ${value}</div>`
+                        ).join('')}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selectData(index) {
+            selectedIdpel = currentData[index];
+            document.querySelectorAll('.result-item').forEach((item, i) => {
+                item.style.borderLeft = i === index ? '4px solid #10b981' : '4px solid #667eea';
+            });
+        }
+
+        async function showProgramPage() {
+            if (!selectedIdpel) {
+                alert('Mohon pilih data terlebih dahulu');
+                return;
+            }
+
+            document.getElementById('resultsPage').classList.add('hidden');
+            document.getElementById('programPage').classList.remove('hidden');
+
+            const pdfViewer = document.getElementById('pdfViewer');
+            pdfViewer.src = '';
+            
+            const container = document.getElementById('programPage').querySelector('.results-container') || 
+                              createLoadingContainer();
+            container.innerHTML = '<div class="loading">⏳ Mencari file PDF yang sesuai...</div>';
+
+            try {
+                // Ambil semua nilai dari data terpilih untuk dijadikan kata kunci
+                const searchKeywords = Object.values(selectedIdpel)
+                    .filter(val => val && val.toString().trim())
+                    .map(val => val.toString().toLowerCase());
+
+                // Coba baca folder pdf dan cari file yang cocok
+                const pdfFiles = await findPDFFiles();
+                let foundPdf = null;
+
+                for (const pdfFile of pdfFiles) {
+                    try {
+                        // Baca konten PDF sebagai text
+                        const pdfData = await window.fs.readFile(`pdf/${pdfFile}`, { encoding: 'utf8' });
+                        const pdfText = pdfData.toLowerCase();
+
+                        // Cek apakah ada kata kunci yang cocok dalam PDF
+                        const hasMatch = searchKeywords.some(keyword => pdfText.includes(keyword));
+                        
+                        if (hasMatch) {
+                            foundPdf = pdfFile;
+                            break;
+                        }
+                    } catch (err) {
+                        console.log(`Tidak bisa membaca ${pdfFile} sebagai text, mencoba cara lain...`);
+                        // Jika gagal baca sebagai text, coba cocokkan dengan nama file
+                        const fileName = pdfFile.toLowerCase().replace('.pdf', '');
+                        const hasMatch = searchKeywords.some(keyword => 
+                            fileName.includes(keyword) || keyword.includes(fileName)
+                        );
+                        
+                        if (hasMatch) {
+                            foundPdf = pdfFile;
+                            break;
+                        }
+                    }
+                }
+
+                if (foundPdf) {
+                    pdfViewer.src = `pdf/${foundPdf}`;
+                    if (container.parentElement.id === 'programPage') {
+                        container.remove();
+                    }
+                } else {
+                    container.innerHTML = '<div class="error">❌ Tidak ditemukan file PDF yang sesuai dengan data pencarian</div>';
+                }
+                
+                pdfViewer.onerror = () => {
+                    pdfViewer.src = '';
+                    container.innerHTML = '<div class="error">❌ Gagal memuat file PDF</div>';
+                };
+            } catch (error) {
+                container.innerHTML = '<div class="error">❌ Gagal mencari file PDF. Pastikan folder pdf/ tersedia.</div>';
+                console.error('Error:', error);
+            }
+        }
+
+        function createLoadingContainer() {
+            const container = document.createElement('div');
+            container.className = 'results-container';
+            container.style.height = '200px';
+            const programPage = document.getElementById('programPage');
+            const header = programPage.querySelector('.header');
+            header.insertAdjacentElement('afterend', container);
+            return container;
+        }
+
+        async function findPDFFiles() {
+            // Daftar nama file PDF yang umum - bisa disesuaikan
+            const commonFiles = [];
+            
+            // Coba baca beberapa kemungkinan file
+            for (let i = 1; i <= 100; i++) {
+                commonFiles.push(`${i}.pdf`);
+                commonFiles.push(`file${i}.pdf`);
+                commonFiles.push(`doc${i}.pdf`);
+            }
+
+            // Juga coba dengan IDPEL dari data yang dipilih
+            const idpel = selectedIdpel['IDPEL'] || selectedIdpel['idpel'] || Object.values(selectedIdpel)[0];
+            commonFiles.unshift(`${idpel}.pdf`);
+            
+            // Coba nama lain dari kolom data
+            Object.values(selectedIdpel).forEach(val => {
+                if (val && val.toString().trim()) {
+                    commonFiles.push(`${val}.pdf`);
+                }
+            });
+
+            // Filter file yang benar-benar ada
+            const existingFiles = [];
+            for (const file of commonFiles) {
+                try {
+                    await window.fs.readFile(`pdf/${file}`);
+                    existingFiles.push(file);
+                } catch (err) {
+                    // File tidak ada, skip
+                }
+            }
+
+            return existingFiles;
+        }
+
+        function showLaporanPage() {
+            if (!selectedIdpel) {
+                alert('Mohon pilih data terlebih dahulu');
+                return;
+            }
+
+            const idpel = selectedIdpel['IDPEL'] || selectedIdpel['idpel'] || Object.values(selectedIdpel)[0];
+            document.getElementById('idpelInput').value = idpel;
+            
+            document.getElementById('resultsPage').classList.add('hidden');
+            document.getElementById('laporanPage').classList.remove('hidden');
+
+            // Ambil lokasi
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        currentLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                    },
+                    (error) => {
+                        console.error('Error getting location:', error);
+                        currentLocation = null;
+                    }
+                );
+            }
+        }
+
+        function sendWhatsApp() {
+            const idpel = document.getElementById('idpelInput').value;
+            const tegangan = document.getElementById('teganganInput').value;
+            const noWa = document.getElementById('waInput').value;
+
+            if (!tegangan || !noWa) {
+                alert('Mohon lengkapi semua field');
+                return;
+            }
+
+            let lokasi = 'Lokasi tidak tersedia';
+            if (currentLocation) {
+                lokasi = `https://maps.google.com/?q=${currentLocation.lat},${currentLocation.lng}`;
+            }
+
+            const message = `*LAPORAN PELANGGAN*\n\nIDPEL: ${idpel}\nTegangan: ${tegangan}\nNo. WA: ${noWa}\nLokasi: ${lokasi}`;
+            
+            const waUrl = `https://wa.me/${noWa.replace(/^0/, '62')}?text=${encodeURIComponent(message)}`;
+            window.open(waUrl, '_blank');
+        }
+
+        function showMainPage() {
+            document.getElementById('resultsPage').classList.add('hidden');
+            document.getElementById('mainPage').classList.remove('hidden');
+            document.getElementById('searchInput').value = '';
+            currentData = null;
+            selectedIdpel = null;
+        }
+
+        function showResultsPage() {
+            document.getElementById('programPage').classList.add('hidden');
+            document.getElementById('laporanPage').classList.add('hidden');
+            document.getElementById('resultsPage').classList.remove('hidden');
+        }
+
+        // Enter key untuk search
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchData();
+        });
+    </script>
+</body>
+</html>
