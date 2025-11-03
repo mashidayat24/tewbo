@@ -95,7 +95,7 @@
     <div class="container">
         <!-- vkrn sanxing -->
         <div class="search-page" id="searchPage">
-            <div class="logo"><br><br><br>🔍<br><br>VKRN SANXING <br>ULP WONOSOBO<br>  <small style="color: #00A2B9; margin-top: 5px; display: block;">Sistem informasi dan Pelaporan Pemasangan KWH VKRN Sanxing</small></div>
+            <div class="logo"><br>🔍<br><br>VKRN SANXING <br>ULP WONOSOBO<br>  <small style="color: #00A2B9; margin-top: 5px; display: block;">Sistem informasi dan Pelaporan Pemasangan KWH VKRN Sanxing</small></div>
             <br><br>
             <div class="search-box">
                 <input type="text" id="searchInput" placeholder="Masukkan pencarian..." autofocus>
@@ -152,7 +152,7 @@
                     </div>
 
                     <div style="margin-bottom: 20px;">
-                        <label style="display: block; font-weight: 600; color: #1e293b; margin-bottom: 8px;">Nama Pelanggan</label>
+                        <label style="display: block; font-weight: 600; color: #1e293b; margin-bottom: 8px;"></label>
                         <input type="text" id="waNama" readonly style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 16px; background: #f8fafc;">
                     </div>
 
@@ -169,7 +169,7 @@
                     <div style="margin-bottom: 20px;">
                         <label style="display: block; font-weight: 600; color: #1e293b; margin-bottom: 8px;">📍 Lokasi Saat ini</label>
                         <div style="display: flex; gap: 10px;">
-                            <input type="text" id="waLokasi" readonly placeholder="Klik tombol untuk dapatkan lokasi" style="flex: 1; padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; background: #f8fafc;">
+                            <input type="text" id="waLokasi" readonly placeholder="Klik tombol  lokasi ➡️➡️" style="flex: 1; padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; background: #f8fafc;">
                             <button onclick="getCurrentLocation()" style="padding: 12px 20px; background: #2563eb; color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; white-space: nowrap;">📍 Lokasi</button>
                         </div>
                         <small style="color: #64748b; margin-top: 5px; display: block;">Izinkan akses lokasi saat diminta</small>
@@ -450,15 +450,16 @@
                 if (!lokasi) { alert('Silakan dapatkan lokasi perangkat terlebih dahulu!'); return; }
 
                 const message =
-`*Laporan Pemasangan vkrn*
+`*LAPORAN PEMASANGAN* 
+*VKRN KWH SANXING*
 
-*Nama:* ${nama || '-'}
-*IDPEL:* ${idpel || '-'}
-*Kelurahan:* ${kelurahan || '-'}
-*Kecamatan:* ${kecamatan || '-'}
-*Lokasi Pemasangan:*
-${lokasi}
-*Tegangan:*${tegangan ? ` ${tegangan}` : ' (tidak diisi)'}`;
+Nama :  ${nama || '-'}
+IDPEL :  ${idpel || '-'}
+Kelurahan :  ${kelurahan || '-'}
+Kecamatan :  ${kecamatan || '-'}
+Tegangan kwh sanxing :  ${tegangan} V
+Lokasi Pemasangan : 
+${lokasi}`;
 
                 try { await navigator.clipboard.writeText(message); } catch (_) {}
 
